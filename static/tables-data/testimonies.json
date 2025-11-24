@@ -1,1 +1,27 @@
-[]
+[
+  {
+    "id": 1,
+    "testimony": "Saw a man running near the fountain.",
+    "suspect_id": 1
+  },
+  {
+    "id": 2,
+    "testimony": "Heard a loud noise coming from the library.",
+    "suspect_id": 2
+  },
+  {
+    "id": 3,
+    "testimony": "Noticed someone acting suspiciously near the store.",
+    "suspect_id": 3
+  },
+  {
+    "id": 4,
+    "testimony": "Witnessed an argument near the statue.",
+    "suspect_id": 4
+  },
+  {
+    "id": 5,
+    "testimony": "Saw a boat leaving the dock in a hurry.",
+    "suspect_id": 5
+  }
+]

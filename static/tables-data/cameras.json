@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "id": 1,
+    "place_id": 1,
+    "angle": "North",
+    "record_starts": "2023-10-15T22:00:00",
+    "record_ends": "2023-10-15T23:30:00",
+    "record": "Footage of a person near the fountain."
+  },
+  {
+    "id": 2,
+    "place_id": 2,
+    "angle": "East",
+    "record_starts": "2023-11-02T01:30:00",
+    "record_ends": "2023-11-02T02:15:00",
+    "record": "Footage of someone breaking the window."
+  },
+  {
+    "id": 3,
+    "place_id": 3,
+    "angle": "South",
+    "record_starts": "2023-11-10T15:45:00",
+    "record_ends": "2023-11-10T16:20:00",
+    "record": "Footage of a person leaving the store."
+  },
+  {
+    "id": 4,
+    "place_id": 4,
+    "angle": "West",
+    "record_starts": "2023-11-18T18:10:00",
+    "record_ends": "2023-11-18T18:45:00",
+    "record": "Footage of an argument near the statue."
+  },
+  {
+    "id": 5,
+    "place_id": 5,
+    "angle": "North-East",
+    "record_starts": "2023-11-25T20:30:00",
+    "record_ends": "2023-11-25T21:15:00",
+    "record": "Footage of a boat leaving the dock."
+  }
+]
