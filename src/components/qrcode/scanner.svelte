@@ -84,9 +84,6 @@
         backdrop-filter: blur(5px);
         text-align: center;
       }
-
-      button {
-      }
     }
   }
 </style>
