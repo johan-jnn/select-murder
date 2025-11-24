@@ -1,3 +1,4 @@
+import settings, { BindedSetting } from '$lib/settings';
 import Database from './main';
 
 /**
@@ -5,13 +6,13 @@ import Database from './main';
  */
 export default class GameSeeder {
   private static IS_SEEDED_VALUE: string = '1';
-  private static IS_SEEDED_KEY: string = 'select-murder.is_seeded';
+  private static IS_SEEDED_STORE: BindedSetting = settings.binded('db.is_seeded');
 
   /**
    * Does the database has been seeded
    */
   static get isSeeded() {
-    return window.localStorage.getItem(this.IS_SEEDED_KEY) === this.IS_SEEDED_VALUE;
+    return this.IS_SEEDED_STORE.get() === this.IS_SEEDED_VALUE;
   }
   /**
    * Seed the database
@@ -28,6 +29,6 @@ export default class GameSeeder {
       }
     }
 
-    window.localStorage.setItem(this.IS_SEEDED_KEY, this.IS_SEEDED_VALUE);
+    this.IS_SEEDED_STORE.set(this.IS_SEEDED_VALUE);
   }
 }
