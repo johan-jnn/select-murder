@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Knewave&display=swap');
+
+*,
+::before,
+::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Knewave', sans-serif;
+  // https://clamp.font-size.app/?config=eyJyb290IjoiMTYiLCJtaW5XaWR0aCI6IjMwMHB4IiwibWF4V2lkdGgiOiIxNDAwcHgiLCJtaW5Gb250U2l6ZSI6IjE0cHgiLCJtYXhGb250U2l6ZSI6IjI4cHgifQ%3D%3D
+  font-size: clamp(0.875rem, 0.6364rem + 1.2727vw, 1.75rem);
+  font-optical-sizing: auto;
+}
+
+button {
+  font-family: inherit;
+  padding: 1em 2em;
+  background-color: hsla(251, 100%, 62%, 0.5);
+  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+
+  text-transform: uppercase;
+}

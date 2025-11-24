@@ -18,7 +18,7 @@ export default class GameSeeder {
    * @param force If the database has already been seeded, do you want to clear and re-seed it ?
    */
   static async seed(force = false) {
-    if (!(this.isSeeded || force)) return;
+    if (this.isSeeded && !force) return;
 
     for await (const table of Database.tables) {
       const data = await fetch(`/tables-data/${table.name}.json`);
