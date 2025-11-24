@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "birthdate": "1985-05-12",
+    "crime_scene_id": 1
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "birthdate": "1990-08-22",
+    "crime_scene_id": 2
+  },
+  {
+    "id": 3,
+    "name": "Robert Johnson",
+    "birthdate": "1978-11-30",
+    "crime_scene_id": 3
+  },
+  {
+    "id": 4,
+    "name": "Emily Davis",
+    "birthdate": "1982-03-17",
+    "crime_scene_id": 4
+  },
+  {
+    "id": 5,
+    "name": "Michael Brown",
+    "birthdate": "1995-07-09",
+    "crime_scene_id": 5
+  }
+]

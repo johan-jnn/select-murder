@@ -1,1 +1,37 @@
-[]
+[
+  {
+    "id": 1,
+    "object": "Black Glove",
+    "details": "Found near the fountain.",
+    "crime_scene_id": 1,
+    "suspect_id": 1
+  },
+  {
+    "id": 2,
+    "object": "Broken Glass",
+    "details": "Scattered near the library entrance.",
+    "crime_scene_id": 2,
+    "suspect_id": 2
+  },
+  {
+    "id": 3,
+    "object": "Security Tag",
+    "details": "Found near the store exit.",
+    "crime_scene_id": 3,
+    "suspect_id": 3
+  },
+  {
+    "id": 4,
+    "object": "Torn Jacket",
+    "details": "Found near the statue.",
+    "crime_scene_id": 4,
+    "suspect_id": 4
+  },
+  {
+    "id": 5,
+    "object": "Fishing Net",
+    "details": "Found tangled on the dock.",
+    "crime_scene_id": 5,
+    "suspect_id": 5
+  }
+]

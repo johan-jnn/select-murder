@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "Central Park"
+  },
+  {
+    "id": 2,
+    "name": "Downtown Library"
+  },
+  {
+    "id": 3,
+    "name": "City Mall"
+  },
+  {
+    "id": 4,
+    "name": "Old Town Square"
+  },
+  {
+    "id": 5,
+    "name": "Harbor Docks"
+  }
+]

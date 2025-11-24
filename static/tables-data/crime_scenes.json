@@ -1,1 +1,37 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "Midnight Incident",
+    "date": "2023-10-15",
+    "place_id": 1,
+    "description": "A suspicious event occurred near the fountain."
+  },
+  {
+    "id": 2,
+    "name": "Library Break-in",
+    "date": "2023-11-02",
+    "place_id": 2,
+    "description": "Books were scattered, and a window was broken."
+  },
+  {
+    "id": 3,
+    "name": "Mall Theft",
+    "date": "2023-11-10",
+    "place_id": 3,
+    "description": "A high-value item was stolen from a store."
+  },
+  {
+    "id": 4,
+    "name": "Square Disturbance",
+    "date": "2023-11-18",
+    "place_id": 4,
+    "description": "A loud argument was reported near the statue."
+  },
+  {
+    "id": 5,
+    "name": "Dockside Mystery",
+    "date": "2023-11-25",
+    "place_id": 5,
+    "description": "A boat was found abandoned with signs of a struggle."
+  }
+]
