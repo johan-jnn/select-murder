@@ -15,6 +15,7 @@ All QR-codes data is a JSON-based object, depending on the card's type, the JSON
 ```json
 {
   "type": "<card-type>",
+  "group": "table" | "modifier",
   "data": <data depending on the card>
 }
 ```
@@ -24,6 +25,7 @@ All QR-codes data is a JSON-based object, depending on the card's type, the JSON
 ```json
 {
   "type": "table",
+  "group": "table",
   "data": {
     "table": "<database's table>"
   }
@@ -35,6 +37,7 @@ All QR-codes data is a JSON-based object, depending on the card's type, the JSON
 ```json
 {
   "type": "table-join",
+  "group": "table",
   "data": {
     "table": "<database's table>"
   }
@@ -46,6 +49,7 @@ All QR-codes data is a JSON-based object, depending on the card's type, the JSON
 ```json
 {
   "type": "where",
+  "group": "modifier",
   "data": {
     "type": "in" | "between" | "like" | null
   }
@@ -57,6 +61,7 @@ All QR-codes data is a JSON-based object, depending on the card's type, the JSON
 ```json
 {
   "type": "order-by",
+  "group": "modifier",
   "data": null
 }
 ```
@@ -66,6 +71,7 @@ All QR-codes data is a JSON-based object, depending on the card's type, the JSON
 ```json
 {
   "type": "group-by",
+  "group": "modifier",
   "data": {
     "aggregater": "AVG" | "COUNT" | "MAX" | "MIN" | "SUM"
   }
@@ -77,6 +83,7 @@ All QR-codes data is a JSON-based object, depending on the card's type, the JSON
 ```json
 {
   "type": "limit",
+  "group": "modifier",
   "data": null
 }
 ```
@@ -86,7 +93,7 @@ All QR-codes data is a JSON-based object, depending on the card's type, the JSON
 ```json
 {
   "type": "jocker",
-  "data": null
+  "group": "table" | "modifier",
 }
 ```
 
@@ -95,6 +102,7 @@ All QR-codes data is a JSON-based object, depending on the card's type, the JSON
 ```json
 {
   "type": "suspicion",
+  "group": "table" | "modifier",
   "data": null
 }
 ```
