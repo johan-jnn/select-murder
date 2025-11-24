@@ -30,7 +30,7 @@ type WhereCard = QRData<
   }
 >;
 type OrderByCard = QRData<'order-by', 'modifier', null>;
-type GroupBy = QRData<
+type GroupByCard = QRData<
   'group-by',
   'modifier',
   {
@@ -40,3 +40,13 @@ type GroupBy = QRData<
 type LimitCard = QRData<'limit', 'modifier', null>;
 type JockerCard = QRData<'jocker', CardGroup, null>;
 type DeleteCard = QRData<'suspicion', null, null>;
+
+type QRCard =
+  | TableCard
+  | TableJoinCard
+  | WhereCard
+  | OrderByCard
+  | GroupByCard
+  | LimitCard
+  | JockerCard
+  | DeleteCard;
