@@ -10,10 +10,13 @@
   let camera: QrScanner.FacingMode =
     (preferedCamera.get() as QrScanner.FacingMode | null) ?? 'user';
 
-  const { oncancel = () => {}, onscanned = () => {} } = $props<{
+  const {
+    oncancel = () => {},
+    onscanned = () => {}
+  }: {
     oncancel?: () => any;
     onscanned?: (content: string) => any;
-  }>();
+  } = $props();
 
   function switchCam() {
     camera = camera === 'environment' ? 'user' : 'environment';
