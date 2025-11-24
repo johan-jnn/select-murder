@@ -1,32 +1,36 @@
 <script lang="ts">
+  import { Settings } from '$lib/settings';
   import QrScanner from 'qr-scanner';
   import { onMount } from 'svelte';
+
+  const preferedCamera = new Settings(window.sessionStorage).binded('prefered-camera');
 
   let video: HTMLVideoElement;
   let scanner: QrScanner;
   let camera: QrScanner.FacingMode =
-    (window.sessionStorage.getItem(
-      'select-murder.prefered-camera'
-    ) as QrScanner.FacingMode | null) ?? 'user';
+    (preferedCamera.get() as QrScanner.FacingMode | null) ?? 'user';
 
-  const { onCancel = () => {}, onScanned = () => {} } = $props<{
-    onCancel?: () => any;
-    onScanned?: (content: string) => any;
+  const { oncancel = () => {}, onscanned = () => {} } = $props<{
+    oncancel?: () => any;
+    onscanned?: (content: string) => any;
   }>();
 
   function switchCam() {
     camera = camera === 'environment' ? 'user' : 'environment';
-    window.sessionStorage.setItem('select-murder.prefered-camera', camera);
+    preferedCamera.set(camera);
     scanner.setCamera(camera);
   }
 
   onMount(() => {
     scanner = new QrScanner(video, (result) => {
-      onScanned(result);
+      onscanned(result);
       scanner.stop();
     });
     scanner.setCamera(camera);
-    scanner.start();
+    scanner.start().catch(() => {
+      alert('Your camera seems to be offline.');
+      oncancel();
+    });
   });
 </script>
 
@@ -41,7 +45,7 @@
 
     <div class="actions">
       <button type="button" onclick={switchCam}>Change camera</button>
-      <button type="button" onclick={() => onCancel()}>Cancel</button>
+      <button type="button" onclick={() => oncancel()}>Cancel</button>
     </div>
   </div>
   <video bind:this={video} aria-hidden="true"></video>

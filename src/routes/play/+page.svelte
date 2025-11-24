@@ -10,8 +10,8 @@
 
 {#if scanning}
   <Scanner
-    onCancel={() => (scanning = false)}
-    onScanned={(result) => ((value = result), (scanning = false))}
+    oncancel={() => (scanning = false)}
+    onscanned={(result) => ((value = result), (scanning = false))}
   />
 {:else}
   <p>Value: {value}</p>
