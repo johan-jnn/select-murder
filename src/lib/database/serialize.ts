@@ -33,7 +33,7 @@ export async function serialize(row: { [key: string]: string }): Promise<{ [key:
           value: new Date(row[key])
         }
       : {
-          value: row[key]
+          value: row[key] ?? "<NULL>"
         };
 
     const serialized: Row = {
@@ -42,19 +42,17 @@ export async function serialize(row: { [key: string]: string }): Promise<{ [key:
       original_value: row[key],
       ...value
     };
-    if (key.endsWith('_id')) {
-      if (!row[key]) serialized.value = '<not set>';
-      else {
-        const table = key.replace('_id', '') + 's';
 
-        //@ts-ignore
-        const entity = await (database[table] as EntityTable<{ [key: string]: string }>)
-          .where('id')
-          .equals(row[key])
-          .first();
+    if (key.endsWith('_id') && row[key]) {
+      const table = key.replace('_id', '') + 's';
 
-        serialized.value = entity?.name ?? entity?.object ?? value.value;
-      }
+      //@ts-ignore
+      const entity = await (database[table] as EntityTable<{ [key: string]: string }>)
+        .where('id')
+        .equals(row[key])
+        .first();
+
+      serialized.value = entity?.name ?? entity?.object ?? value.value;
     }
 
     serializedRow[key] = serialized;
