@@ -12,14 +12,12 @@
     oncloseasked: () => any;
   } = $props();
 
-  const timeout = parseInt(settings.get('game.result-ms-timeout')!);
-  const tm_id = setTimeout(() => {
-    data.oncloseasked();
-  }, timeout);
-
   $inspect('Table:', data.table, 'Modifiers:', data.modifiers);
 
+  let timeout_id: number;
   type Rows = { [key: string]: Row }[];
+
+  const timeout = parseInt(settings.get('game.result-ms-timeout')!);
   let rows = $state<Promise<Rows>>();
 
   if (data.table.type === 'table') {
@@ -42,16 +40,21 @@
       .catch((err) => {
         console.error(err);
         return [];
+      })
+      .finally(() => {
+        // Start the timer
+        timeout_id = setTimeout(() => {
+          data.oncloseasked();
+        }, timeout);
       });
   }
 
   onDestroy(() => {
-    clearTimeout(tm_id);
+    clearTimeout(timeout_id);
   });
 </script>
 
 {#snippet table(rows: Rows)}
-  {$inspect(rows)}
   <table>
     <thead>
       <tr>
