@@ -44,8 +44,8 @@
       <ul>
         <li>
           <strong>WHERE</strong>: filter the results according to a condition on a specific column
-          => values "equal to", "not equal to", "greater than", "less than" a specified value (e.g.
-          firstname="John", angle>=90)
+          =&gt values "equal to", "not equal to", "greater than", "less than" a specified value
+          (e.g. firstname="John", angle&gt=90)
         </li>
         <li>
           <strong>WHERE IN</strong>: filter the results according to a condition on a specific
