@@ -57,8 +57,7 @@ button,
   text-transform: uppercase;
 }
 
-// Tables
-table {
+Tables table {
   width: 100%;
   overflow-x: scroll;
   border-radius: 0.5em;
@@ -82,6 +81,7 @@ table {
     border-top: 0.15em dashed var(--color-black);
   }
 }
+
 .container {
   max-width: 100%;
   padding: 0 1rem;

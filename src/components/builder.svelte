@@ -19,8 +19,6 @@
 
   let askFor = $state<null | 'table' | 'builder'>(null);
   let qrmsg = $state('');
-  // svelte-ignore non_reactive_update - The form is just used when a button is triggered (no auto-action when it changes)
-  let form: HTMLFormElement;
 
   const builder_limit = parseInt(settings.get('game.max-card-per-query')!);
 
@@ -127,25 +125,18 @@
       {/snippet}
     </Scanner>
   {/if}
-  <div>
+  <div class="builders-container">
     <h1>{builders.length} card of {builder_limit} scanned.</h1>
 
     {@render builder(builders)}
 
-  <form method="dialog" bind:this={form}>
-    {@render builder(builders)}
-  </form>
-
-  {#if builders.length < builder_limit}
-    <button type="button" onclick={() => (show_qr = true)}>Scan your next card</button>
-  {/if}
-  <button
-    type="button"
-    onclick={() => {
-      form.reportValidity() && props.onbuildable(table!, builders);
-    }}>Get the result</button
-  >
-  <button type="button" onclick={reset}>Cancel</button>
+    {#if builders.length < builder_limit}
+      <button type="button" onclick={() => (show_qr = true)}>Scan your next card</button>
+    {/if}
+    <button type="button" onclick={() => props.onbuildable(table!, builders)}>Get the result</button
+    >
+    <button type="button" onclick={reset}>Cancel</button>
+  </div>
 {/if}
 
 {#snippet builder(builds: Buildable<QRCard>[])}
@@ -161,8 +152,8 @@
           type="button"
           onclick={() => (builders = builders.filter((b) => b.id !== build.id))}
         >
-          Remove
-        </button>
+          Remove</button
+        >
       </li>
     {/each}
   </ul>
@@ -172,6 +163,10 @@
   h1 {
     font-size: 1.8rem;
     padding-top: 2rem;
+  }
+  .builders-container {
+    max-width: 400px;
+    margin: auto;
   }
 
   button {

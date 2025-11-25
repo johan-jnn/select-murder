@@ -97,7 +97,9 @@
     </main>
   {/if}
 
-  <button type="button" onclick={data.oncloseasked}>Close</button>
+  <button class="close-btn bg-primary tx-white" type="button" onclick={data.oncloseasked}
+    >Close</button
+  >
 </div>
 
 <style lang="scss">
@@ -166,11 +168,11 @@
   }
 
   // h1 {
+  //   font-size: 1.4rem;
   //   margin-top: 2rem;
   // }
 
   // .table-container {
-  //   position: relative;
   //   width: 100%;
   //   overflow-x: auto;
   //   background-color: var(--color-black);
