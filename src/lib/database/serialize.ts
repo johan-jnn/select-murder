@@ -8,11 +8,15 @@ type RowValue =
     }
   | {
       value: Date;
+    }
+  | {
+      value: null;
     };
 
 export type Row = {
   key: string;
   label: string;
+  original_value: string;
 } & RowValue;
 /**
  * Serialize the rows and keys for the front-end
@@ -24,18 +28,18 @@ export async function serialize(row: { [key: string]: string }): Promise<{ [key:
   for (const key in row) {
     if (key === 'id') continue;
 
-    const date = new Date(row[key]);
-    const value: RowValue = isNaN(+date)
+    const value: RowValue = /^\d{4}-\d{1,2}-\d{1,2}.*/.test(row[key])
       ? {
-          value: row[key]
+          value: new Date(row[key])
         }
       : {
-          value: date
+          value: row[key]
         };
 
     const serialized: Row = {
       key,
       label: key.replaceAll('_id', '').replaceAll('_', ' '),
+      original_value: row[key],
       ...value
     };
     if (key.endsWith('_id')) {
@@ -49,7 +53,7 @@ export async function serialize(row: { [key: string]: string }): Promise<{ [key:
           .equals(row[key])
           .first();
 
-        serialized.value = entity?.name ?? entity?.object ?? row[key];
+        serialized.value = entity?.name ?? entity?.object ?? value.value;
       }
     }
 

@@ -10,10 +10,11 @@
     oncloseasked: () => any;
   } = $props();
 
-  console.debug('Table:', data.table, 'Modifiers:', data.modifiers);
+  $inspect('Table:', data.table, 'Modifiers:', data.modifiers);
 
   type Rows = { [key: string]: Row }[];
   let rows = $state<Promise<Rows>>();
+
   if (data.table.type === 'table') {
     let collection: Collection<any, IndexableType, any> =
       database[data.table.data.table].toCollection();
@@ -46,7 +47,7 @@
       {#each rows as row}
         <tr>
           {#each Object.values(row) as value}
-            <td>{value.value.toString()}</td>
+            <td>{value.value?.toString()}</td>
           {/each}
         </tr>
       {/each}
@@ -56,6 +57,7 @@
 
 {#if data.table.type === 'table'}
   <h1>Here is your result :</h1>
+
   {#await rows}
     <p>Querying your result...</p>
   {:then rows}
