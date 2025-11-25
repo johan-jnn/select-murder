@@ -6,6 +6,8 @@
   const data: {
     table: TableCard | DeleteCard;
     modifiers: Buildable<ModifierCard>[];
+
+    oncloseasked: () => any;
   } = $props();
 
   let rows = $state<PromiseExtended<object[]>>();
@@ -53,3 +55,5 @@
     {/if}
   {/await}
 {/if}
+
+<button type="button" onclick={data.oncloseasked}>Close</button>

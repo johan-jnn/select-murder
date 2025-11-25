@@ -14,7 +14,6 @@
 
   let builders = $state<Buildable<ModifierCard>[]>([]);
 
-  let finish = $state(false);
   let table = $state<TableCard | DeleteCard | null>(null);
   let show_qr = $state(false);
 
@@ -24,7 +23,6 @@
   const builder_limit = parseInt(settings.get('game.max-card-per-query')!);
 
   function reset() {
-    finish = false;
     builders = [];
     table = null;
     show_qr = false;
@@ -92,7 +90,7 @@
   <button type="button" onclick={() => (askFor = 'table')}>Start your query</button>
 {:else if askFor === 'table'}
   <Scanner
-    oncancel={() => (askFor = null)}
+    oncancel={reset}
     onscanned={(data) => verifyQR('table', data) && (askFor = 'builder')}
     title="Scan your table's card"
   >
@@ -102,7 +100,7 @@
       {/if}
     {/snippet}
   </Scanner>
-{:else if builders.length < builder_limit && !finish}
+{:else}
   {#if show_qr}
     <Scanner
       oncancel={() => (show_qr = false)}
@@ -119,18 +117,57 @@
 
   <h1>{builders.length} card of {builder_limit} scanned.</h1>
 
-  {#each builders as builder (builder.id)}
-    {#await builder.COMPONENT then Component}
-      <Component {builder} />
-    {/await}
-  {/each}
+  {@render builder(builders)}
 
-  <button type="button" onclick={() => (show_qr = true)}>Scan your next card</button>
-  <button type="button" onclick={() => (finish = true)}>Get the result</button>
-  <button type="button" onclick={reset}>Cancel</button>
-{:else}
-  <h1>The query is ready !</h1>
-  {JSON.stringify(builders)}
-  <button type="button" onclick={() => props.onbuildable(table!, builders)}>See the result</button>
+  {#if builders.length < builder_limit}
+    <button type="button" onclick={() => (show_qr = true)}>Scan your next card</button>
+  {/if}
+  <button type="button" onclick={() => props.onbuildable(table!, builders)}>Get the result</button>
   <button type="button" onclick={reset}>Cancel</button>
 {/if}
+
+{#snippet builder(builds: Buildable<QRCard>[])}
+  <ul class="builders">
+    {#each builds as build (build.id)}
+      <li id="build-{build.id}">
+        <div class="view">
+          {#await build.COMPONENT then Component}
+            <Component builder={build} />
+          {/await}
+        </div>
+        <button
+          type="button"
+          onclick={() => (builders = builders.filter((b) => b.id !== build.id))}
+        >
+          Remove</button
+        >
+      </li>
+    {/each}
+  </ul>
+{/snippet}
+
+<style lang="scss">
+  .builders {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+    max-height: 80vh;
+    overflow-y: scroll;
+    padding: 0.25em;
+    gap: 1em;
+
+    li {
+      display: flex;
+      background-color: var(--color-primary-light);
+      padding: 0.5em;
+      border-radius: 0.5em;
+
+      .view {
+        flex-grow: 1;
+      }
+      button {
+        height: fit-content;
+      }
+    }
+  }
+</style>

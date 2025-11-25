@@ -34,7 +34,7 @@
         axis: 'y'
       }}
     >
-      <Result {table} {modifiers} />
+      <Result {table} {modifiers} oncloseasked={() => (table = null)} />
     </div>
   {/if}
 {/if}
