@@ -11,5 +11,5 @@ export abstract class Buildable<Data extends QRCard, Binded = unknown> {
     this.id = id;
   }
 
-  abstract build(query: Collection): Collection;
+  abstract build(query: Collection, stack: Buildable<QRCard>[]): Collection;
 }

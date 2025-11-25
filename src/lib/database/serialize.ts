@@ -17,7 +17,7 @@ export type Row = {
 /**
  * Serialize the rows and keys for the front-end
  * 1. Remove the ids
- * 2.
+ * 2. Pre-fetch data if needed
  */
 export async function serialize(row: { [key: string]: string }): Promise<{ [key: string]: Row }> {
   const serializedRow: { [key: string]: Row } = {};
@@ -39,15 +39,18 @@ export async function serialize(row: { [key: string]: string }): Promise<{ [key:
       ...value
     };
     if (key.endsWith('_id')) {
-      const table = key.replace('_id', '') + "s";
-      //@ts-ignore
-      const entity = await (database[table] as EntityTable<{ [key: string]: string }>)
-        .where('id')
-        .equals(row[key])
-        .first();
-      console.log(entity);
-      
-      serialized.value = entity?.name ?? entity?.object ?? row[key];
+      if (!row[key]) serialized.value = '<not set>';
+      else {
+        const table = key.replace('_id', '') + 's';
+
+        //@ts-ignore
+        const entity = await (database[table] as EntityTable<{ [key: string]: string }>)
+          .where('id')
+          .equals(row[key])
+          .first();
+
+        serialized.value = entity?.name ?? entity?.object ?? row[key];
+      }
     }
 
     serializedRow[key] = serialized;
