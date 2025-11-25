@@ -55,24 +55,27 @@
 </script>
 
 {#snippet table(rows: Rows)}
-  <table>
-    <thead>
-      <tr>
-        {#each Object.values(rows[0]) as column}
-          <th>{column.label}</th>
-        {/each}
-      </tr>
-    </thead>
-    <tbody>
-      {#each rows as row}
+  {$inspect(rows)}
+  <div class="table-container">
+    <table>
+      <thead>
         <tr>
-          {#each Object.values(row) as value}
-            <td>{value.value?.toString()}</td>
+          {#each Object.values(rows[0]) as column}
+            <th>{column.label}</th>
           {/each}
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each rows as row}
+          <tr>
+            {#each Object.values(row) as value}
+              <td>{value.value ? value.value.toString() : 'null'}</td>
+            {/each}
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
 {/snippet}
 
 <div class="tab">
@@ -161,4 +164,27 @@
       animation: fadeout var(--tm) cubic-bezier(1, 1, 1, 0) forwards;
     }
   }
+
+  // h1 {
+  //   margin-top: 2rem;
+  // }
+
+  // .table-container {
+  //   position: relative;
+  //   width: 100%;
+  //   overflow-x: auto;
+  //   background-color: var(--color-black);
+  //   padding: 1em;
+  //   border-radius: 6px;
+  // }
+
+  // th,
+  // td {
+  //   padding: 6px;
+  // }
+
+  // .close-btn {
+  //   display: block;
+  //   margin: 1rem auto;
+  // }
 </style>

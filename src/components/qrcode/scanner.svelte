@@ -97,6 +97,11 @@
         backdrop-filter: blur(5px);
         text-align: center;
       }
+      .actions {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-evenly;
+      }
     }
   }
 </style>

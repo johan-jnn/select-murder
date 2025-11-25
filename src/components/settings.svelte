@@ -59,19 +59,20 @@
         />
       </label>
 
-    <div class="actions">
-      <button class="card-cta bg-white tx-primary" type="submit">Start the game</button>
-      <button
-        class="card-cta bg-white tx-primary" 
-        type="button"
-        style="opacity:0.80;"
-        onclick={() => {
-          GameSeeder.forceRefreshOnNextPageLoad();
-          location.reload();
-        }}>Refresh datas</button
-      >
-    </div>
-  </form>
+      <div class="actions">
+        <button class="card-cta bg-white tx-primary" type="submit">Start the game</button>
+        <button
+          class="card-cta bg-white tx-primary"
+          type="button"
+          style="opacity:0.80;"
+          onclick={() => {
+            GameSeeder.forceRefreshOnNextPageLoad();
+            location.reload();
+          }}>Refresh datas</button
+        >
+      </div>
+    </form>
+  </div>
 </div>
 
 <style lang="scss">
@@ -86,7 +87,7 @@
       }
 
       label {
-        margin: 1em 0 0;
+        margin: 0.6em 0 0;
         display: block;
         line-height: 1.8rem;
         font-size: 1rem;

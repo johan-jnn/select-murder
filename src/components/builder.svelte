@@ -90,10 +90,15 @@
 
 {#if askFor === null}
   <div class="center-screen">
-    <div class="content">
-      <p>You have formed a query with the cards in your hand?</p>
+    <div class="card">
+      <h2 class="card-title bg-primary-light tx-center">Let's go !</h2>
+      <div class="card-body bg-white tx-primary">
+        <p>You have formed a query with the cards in your hand?</p>
 
-      <button type="button" onclick={() => (askFor = 'table')}>Start your query</button>
+        <button class="card-cta" type="button" onclick={() => (askFor = 'table')}
+          >Start your query</button
+        >
+      </div>
     </div>
   </div>
 {:else if askFor === 'table'}
@@ -122,8 +127,10 @@
       {/snippet}
     </Scanner>
   {/if}
+  <div>
+    <h1>{builders.length} card of {builder_limit} scanned.</h1>
 
-  <h1>{builders.length} card of {builder_limit} scanned.</h1>
+    {@render builder(builders)}
 
   <form method="dialog" bind:this={form}>
     {@render builder(builders)}
@@ -162,26 +169,51 @@
 {/snippet}
 
 <style lang="scss">
+  h1 {
+    font-size: 1.8rem;
+    padding-top: 2rem;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 1em;
+  }
+
   .builders {
     display: grid;
     grid-template-rows: auto;
     grid-template-columns: 1fr;
     max-height: 80vh;
-    overflow-y: scroll;
+    // overflow-y: scroll;
     padding: 0.25em;
     gap: 1em;
 
     li {
       display: flex;
+      align-items: center;
       background-color: var(--color-primary-light);
       padding: 0.5em;
       border-radius: 0.5em;
-
+      gap: 10px;
       .view {
-        flex-grow: 1;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        :global(input),
+        :global(select) {
+          border-radius: 6px;
+          padding: 6px;
+          font-size: 1.1rem;
+        }
       }
       button {
+        background-color: var(--color-primary);
+        color: var(--color-white);
+        margin: 0;
         height: fit-content;
+        width: fit-content;
+        padding: 1em;
       }
     }
   }
