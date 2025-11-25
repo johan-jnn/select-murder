@@ -13,7 +13,7 @@
         }
       | {
           type: 'between' | 'in';
-          values: [];
+          values: string[];
         };
   }
 
@@ -26,7 +26,7 @@
         type: 'eq',
         value: ''
       }
-    } satisfies WhereBinds;
+    } as WhereBinds;
     constructor(card: WhereCard) {
       super(card);
       this.binded.where = (
@@ -36,7 +36,49 @@
       ) as typeof this.binded.where;
     }
     build(query: Collection): Collection {
-      // todo
+      switch (this.binded.where.type) {
+        case 'eq': {
+          const { value } = this.binded.where;
+          return query.and((row) => row[this.binded.column] == value);
+        }
+        case 'lt': {
+          const { value } = this.binded.where;
+          return query.and((row) => row[this.binded.column] <= value);
+        }
+        case 'gt': {
+          const { value } = this.binded.where;
+          return query.and((row) => row[this.binded.column] >= value);
+        }
+        case 'gt': {
+          const { value } = this.binded.where;
+          return query.and((row) => row[this.binded.column] >= value);
+        }
+        case 'between': {
+          const { values } = this.binded.where;
+          return query.and(
+            (row) => row[this.binded.column] >= values[0] && row[this.binded.column] <= values[1]
+          );
+        }
+        case 'in': {
+          const { values } = this.binded.where;
+          return query.and((row) => values.includes(row[this.binded.column]));
+        }
+        case 'like': {
+          const { value } = this.binded.where;
+          const reg = new RegExp(
+            Array.from(value)
+              .map((character) =>
+                character === '*' ? '.' : character === '%' ? '.*' : `\\${character}`
+              )
+              .join('')
+          );
+
+          return query.and((row) => reg.test(row[this.binded.column]));
+        }
+
+        default:
+          break;
+      }
       return query;
     }
   }
@@ -55,11 +97,14 @@
     stack: Buildable<QRCard>[];
   } = $props();
 
-  let where = $state(builder.binded.where);
+  const whereType = builder.QRData.data.type;
+  let where = $state(builder.binded.where as WhereBinds['where']);
   let table = $state('');
   let column = $state('');
 
   let include_tables: string[] = $state([]);
+  let values: string[] = $state([]);
+
   $effect(() => {
     include_tables = [init_table.data.table];
     stack.forEach((build) => {
@@ -70,8 +115,29 @@
 
     builder.binded = { where, table, column };
   });
-
-  const whereType = builder.QRData.data.type;
+  $effect(() => {
+    if (whereType === null) {
+      where = {
+        type: values[0] as 'eq' | 'lt' | 'gt',
+        value: values[1]
+      };
+    } else if (whereType === 'like') {
+      where = {
+        type: 'like',
+        value: values[0]
+      };
+    } else if (whereType === 'between') {
+      where = {
+        type: 'between',
+        values: [values[0], values[1]]
+      };
+    } else {
+      where = {
+        type: 'in',
+        values
+      };
+    }
+  });
 </script>
 
 <select
@@ -89,19 +155,19 @@
 </select>
 
 {#if whereType === null}
-  <select>
-    <option value="=">Equals</option>
-    <option value="=">Is Lower Than</option>
-    <option value="=">Is Greater Than</option>
+  <select bind:value={values[0]}>
+    <option value="eq">Equals</option>
+    <option value="lt">Is Lower Than</option>
+    <option value="gt">Is Greater Than</option>
   </select>
 
-  <input type="text" placeholder="Leave blank to set NULL" />
+  <input type="text" placeholder="Leave blank to set NULL" bind:value={values[1]} />
 {/if}
 
 {#if whereType === 'between'}
-  <input type="text" />
+  <input type="text" bind:value={values[0]} />
   AND
-  <input type="text" />
+  <input type="text" bind:value={values[1]} />
 {/if}
 
 {#if whereType === 'like'}
@@ -111,5 +177,5 @@
   <p>
     The<code>*</code> character is for any characters (single).
   </p>
-  <input type="text" />
+  <input type="text" bind:value={values[0]} />
 {/if}
