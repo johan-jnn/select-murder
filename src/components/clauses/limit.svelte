@@ -17,6 +17,8 @@
     builder
   }: {
     builder: LimitBuilder;
+    table: TableCard;
+    stack: Buildable<QRCard>[];
   } = $props();
 
   let max = $state(builder.binded.max);

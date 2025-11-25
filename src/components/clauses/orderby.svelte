@@ -18,5 +18,7 @@
     builder
   }: {
     builder: OrderByBuilder;
+    table: TableCard;
+    stack: Buildable<QRCard>[];
   } = $props();
 </script>

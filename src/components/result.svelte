@@ -7,9 +7,10 @@
   const data: {
     table: TableCard | DeleteCard;
     modifiers: Buildable<ModifierCard>[];
-
     oncloseasked: () => any;
   } = $props();
+
+  console.debug('Table:', data.table, 'Modifiers:', data.modifiers);
 
   type Rows = { [key: string]: Row }[];
   let rows = $state<Promise<Rows>>();
@@ -18,14 +19,21 @@
       database[data.table.data.table].toCollection();
 
     for (const modifer of data.modifiers) {
-      collection = modifer.build(collection);
+      collection = modifer.build(collection, data.modifiers);
     }
 
-    rows = collection.toArray().then((rows) => Promise.all(rows.map(serialize)));
+    rows = collection
+      .toArray()
+      .then((rows) => Promise.all(rows.map(serialize)))
+      .catch((err) => {
+        console.error(err);
+        return [];
+      });
   }
 </script>
 
 {#snippet table(rows: Rows)}
+  {$inspect(rows)}
   <table>
     <thead>
       <tr>

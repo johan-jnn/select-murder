@@ -18,5 +18,7 @@
     builder
   }: {
     builder: JoinBuilder;
+    table: TableCard;
+    stack: Buildable<QRCard>[];
   } = $props();
 </script>

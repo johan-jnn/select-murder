@@ -1,4 +1,5 @@
 <script lang="ts">
+  import database from '$lib/database/main';
   import GameSeeder from '$lib/database/seeder';
   import settings from '$lib/settings';
   import { slide } from 'svelte/transition';

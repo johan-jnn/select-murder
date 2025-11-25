@@ -132,7 +132,7 @@
       <li id="build-{build.id}">
         <div class="view">
           {#await build.COMPONENT then Component}
-            <Component builder={build} />
+            <Component builder={build} stack={builders} {table} />
           {/await}
         </div>
         <button
