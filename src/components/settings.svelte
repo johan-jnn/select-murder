@@ -21,16 +21,17 @@
   }
 </script>
 
-<div
-  id="settings"
-  transition:slide={{
-    axis: 'y'
-  }}
->
-  <h1>Choose the game's settings</h1>
+<div class="center-screen">
+  <div
+    id="settings"
+    class="card"
+    transition:slide={{
+      axis: 'y'
+    }}
+  >
+    <h1 id="title-card" class="card-title bg-white tx-primary">Choose Settings</h1>
 
-  <form onsubmit={formSubmit}>
-    <div>
+    <form onsubmit={formSubmit} class="card-body bg-primary-light tx-black">
       <label for="scannable-cards">
         Maximum amount of cards the player can scan in a query ({maxCardPerQuery})
         <input
@@ -57,11 +58,11 @@
           bind:value={resultTimeout}
         />
       </label>
-    </div>
 
     <div class="actions">
-      <button type="submit">Start the game</button>
+      <button class="card-cta bg-white tx-primary" type="submit">Start the game</button>
       <button
+        class="card-cta bg-white tx-primary" 
         type="button"
         style="opacity:0.80;"
         onclick={() => {
@@ -75,12 +76,6 @@
 
 <style lang="scss">
   #settings {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    padding: 1em;
-    height: 100svh;
-
     form {
       display: grid;
       grid-template-rows: 1fr auto;
@@ -91,13 +86,18 @@
       }
 
       label {
-        margin: 2em 0;
+        margin: 1em 0 0;
         display: block;
+        line-height: 1.8rem;
+        font-size: 1rem;
+        font-weight: 500;
       }
       input {
         display: block;
         width: 100%;
         margin: 0.5em 0;
+        accent-color: var(--color-primary) !important;
+        cursor: pointer;
       }
 
       .actions {

@@ -89,7 +89,13 @@
 </script>
 
 {#if askFor === null}
-  <button type="button" onclick={() => (askFor = 'table')}>Start your query</button>
+  <div class="center-screen">
+    <div class="content">
+      <p>You have formed a query with the cards in your hand?</p>
+
+      <button type="button" onclick={() => (askFor = 'table')}>Start your query</button>
+    </div>
+  </div>
 {:else if askFor === 'table'}
   <Scanner
     oncancel={reset}

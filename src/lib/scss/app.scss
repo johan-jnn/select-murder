@@ -9,11 +9,12 @@
 }
 
 :root {
-  --color-primary: #241942;
+  --color-primary: #231942;
   --color-primary-light: #9ba2ff;
   --color-secondary: #890720;
   --color-white: #f4efff;
   --color-black: #1e1e1e;
+  --color-light-grey: #d6d2e6;
 }
 
 body {
@@ -36,7 +37,13 @@ body {
   }
 }
 
-button {
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button,
+.btn {
   font-family: 'Fira Sans', sans-serif;
   font-weight: 800;
   padding: 1em 2em;
@@ -74,4 +81,119 @@ table {
   tr:not(:first-of-type) {
     border-top: 0.15em dashed var(--color-black);
   }
+}
+.container {
+  max-width: 100%;
+  padding: 0 1rem;
+}
+
+h1 {
+  font-size: 2.4rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.3rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.8rem;
+  margin-bottom: 0.6rem;
+}
+
+.center-screen {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-primary-light {
+  background-color: var(--color-primary-light);
+}
+
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+
+.bg-black {
+  background-color: var(--color-black);
+}
+
+.bg-white {
+  background-color: var(--color-white);
+}
+
+.bg-light-grey {
+  background-color: var(--color-light-grey);
+}
+
+.tx-center {
+  text-align: center;
+}
+
+.tx-primary {
+  color: var(--color-primary);
+}
+
+.tx-primary-light {
+  color: var(--color-primary-light);
+}
+
+.tx-secondary {
+  color: var(--color-secondary);
+}
+
+.tx-black {
+  color: var(--color-black);
+}
+
+.tx-white {
+  color: var(--color-white);
+}
+
+.tx-light-grey {
+  color: var(--color-light-grey);
+}
+
+.card {
+  margin: 1rem 0;
+  border-radius: 30px;
+}
+
+.card-title {
+  margin: 0;
+  padding: 1rem 2rem;
+  color: var(--color-primary);
+  border-radius: 30px 30px 0 0;
+  font-size: 1.8rem;
+}
+
+.card-body {
+  padding: 1rem 1rem 2rem;
+  border-radius: 0 0 30px 30px;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.8rem;
+}
+
+.card-cta {
+  display: block;
+  margin: 1.4rem auto 0;
+  text-align: center;
+  border: none;
 }
