@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Settings } from '$lib/settings';
   import QrScanner from 'qr-scanner';
-  import { onMount, type Snippet } from 'svelte';
+  import { onDestroy, onMount, type Snippet } from 'svelte';
 
   const preferedCamera = new Settings(window.sessionStorage).binded('prefered-camera');
 
@@ -37,10 +37,10 @@
       alert('Your camera seems to be offline.');
       oncancel();
     });
+  });
 
-    () => {
-      scanner.stop();
-    };
+  onDestroy(() => {
+    scanner.stop();
   });
 </script>
 
