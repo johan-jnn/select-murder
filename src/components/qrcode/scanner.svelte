@@ -8,7 +8,7 @@
   let video: HTMLVideoElement;
   let scanner: QrScanner;
   let camera: QrScanner.FacingMode =
-    (preferedCamera.get() as QrScanner.FacingMode | null) ?? 'user';
+    (preferedCamera.get() as QrScanner.FacingMode | null) ?? 'environment';
 
   const {
     oncancel = () => {},
