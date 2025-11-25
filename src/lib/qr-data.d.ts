@@ -41,5 +41,5 @@ type LimitCard = QRData<'limit', 'modifier', null>;
 type JockerCard = QRData<'jocker', CardGroup, null>;
 type DeleteCard = QRData<'suspicion', null, null>;
 
-type ModifierCard = TableJoinCard | WhereCard | OrderByCard | LimitCard | JockerCard;
+type ModifierCard = TableJoinCard | WhereCard | OrderByCard | LimitCard | JockerCard | GroupByCard;
 type QRCard = TableCard | ModifierCard | DeleteCard;

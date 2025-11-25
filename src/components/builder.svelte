@@ -1,7 +1,11 @@
 <script lang="ts">
-  import type { Buildable } from '$lib/buildable';
+  import { type Buildable } from '$lib/buildable';
   import settings from '$lib/settings';
+  import { GroupBuilder } from './clauses/group.svelte';
+  import { JoinBuilder } from './clauses/join.svelte';
   import { LimitBuilder } from './clauses/limit.svelte';
+  import { OrderByBuilder } from './clauses/orderby.svelte';
+  import { WhereBuilder } from './clauses/where.svelte';
   import Scanner from './qrcode/scanner.svelte';
 
   const props: {
@@ -54,19 +58,31 @@
         return false;
       }
 
-      let builder: Buildable<ModifierCard>;
+      let builder;
       switch (json.type) {
         case 'limit': {
-          builder = new LimitBuilder(json);
+          builder = LimitBuilder;
           break;
         }
-
+        case 'where':
+          builder = WhereBuilder;
+          break;
+        case 'table-join':
+          builder = JoinBuilder;
+          break;
+        case 'group-by':
+          builder = GroupBuilder;
+          break;
+        case 'order-by':
+          builder = OrderByBuilder;
+          break;
         default: {
-          qrmsg = 'The card is not valid.';
+          qrmsg = 'The qr-code data is not valid.';
           return false;
         }
       }
-      builders.push(builder);
+
+      builders.push(new builder(json));
     }
     return true;
   }
@@ -103,7 +119,7 @@
 
   <h1>{builders.length} card of {builder_limit} scanned.</h1>
 
-  {#each builders as builder}
+  {#each builders as builder (builder.id)}
     {#await builder.COMPONENT then Component}
       <Component {builder} />
     {/await}
