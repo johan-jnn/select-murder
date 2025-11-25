@@ -1,8 +1,15 @@
 <script lang="ts">
+  import type { Buildable } from '$lib/buildable';
   import settings from '$lib/settings';
+  import { LimitBuilder } from './clauses/limit.svelte';
   import Scanner from './qrcode/scanner.svelte';
 
-  let builders = $state<QRCard[]>([]);
+  const props: {
+    onbuildable: (table: TableCard | DeleteCard, buildables: Buildable<ModifierCard>[]) => void;
+  } = $props();
+
+  let builders = $state<Buildable<ModifierCard>[]>([]);
+
   let finish = $state(false);
   let table = $state<TableCard | DeleteCard | null>(null);
   let show_qr = $state(false);
@@ -47,7 +54,19 @@
         return false;
       }
 
-      builders.push(json);
+      let builder: Buildable<ModifierCard>;
+      switch (json.type) {
+        case 'limit': {
+          builder = new LimitBuilder(json);
+          break;
+        }
+
+        default: {
+          qrmsg = 'The card is not valid.';
+          return false;
+        }
+      }
+      builders.push(builder);
     }
     return true;
   }
@@ -83,11 +102,19 @@
   {/if}
 
   <h1>{builders.length} card of {builder_limit} scanned.</h1>
+
+  {#each builders as builder}
+    {#await builder.COMPONENT then Component}
+      <Component {builder} />
+    {/await}
+  {/each}
+
   <button type="button" onclick={() => (show_qr = true)}>Scan your next card</button>
   <button type="button" onclick={() => (finish = true)}>Get the result</button>
   <button type="button" onclick={reset}>Cancel</button>
 {:else}
   <h1>The query is ready !</h1>
   {JSON.stringify(builders)}
+  <button type="button" onclick={() => props.onbuildable(table!, builders)}>See the result</button>
   <button type="button" onclick={reset}>Cancel</button>
 {/if}
