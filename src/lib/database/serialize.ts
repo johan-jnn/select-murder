@@ -39,14 +39,13 @@ export async function serialize(row: { [key: string]: string }): Promise<{ [key:
       ...value
     };
     if (key.endsWith('_id')) {
-      const table = key.replace('_id', '') + "s";
+      const table = key.replace('_id', '') + 's';
       //@ts-ignore
       const entity = await (database[table] as EntityTable<{ [key: string]: string }>)
         .where('id')
         .equals(row[key])
         .first();
-      console.log(entity);
-      
+
       serialized.value = entity?.name ?? entity?.object ?? row[key];
     }
 

@@ -18,7 +18,7 @@
       database[data.table.data.table].toCollection();
 
     for (const modifer of data.modifiers) {
-      collection = modifer.build(collection);
+      collection = modifer.build(collection, data.modifiers);
     }
 
     rows = collection.toArray().then((rows) => Promise.all(rows.map(serialize)));

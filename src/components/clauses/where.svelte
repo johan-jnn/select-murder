@@ -46,18 +46,29 @@
   import database from '$lib/database/main';
 
   let {
-    builder
+    builder,
+    table: init_table,
+    stack
   }: {
     builder: WhereBuilder;
+    table: TableCard;
+    stack: Buildable<QRCard>[];
   } = $props();
 
   let where = $state(builder.binded.where);
   let table = $state('');
   let column = $state('');
-  $effect(() => {
-    builder.binded = { where, table, column };
 
-    console.log(builder.binded);
+  let include_tables: string[] = $state([]);
+  $effect(() => {
+    include_tables = [init_table.data.table];
+    stack.forEach((build) => {
+      if (build.QRData.type === 'table-join') {
+        include_tables.push(build.QRData.data.table);
+      }
+    });
+
+    builder.binded = { where, table, column };
   });
 
   const whereType = builder.QRData.data.type;
@@ -68,7 +79,7 @@
     [table, column] = e.currentTarget.value.split('.').map((v) => v.trim());
   }}
 >
-  {#each database.tables as table}
+  {#each database.tables.filter((t) => include_tables.includes(t.name)) as table}
     <optgroup label={table.name}>
       {#each table.schema.indexes.filter((i) => !i.name.includes('id')) as idx}
         <option value="{table.name}.{idx.name}">{idx.name}</option>
