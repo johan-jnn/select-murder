@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { Buildable } from '$lib/buildable';
   import database from '$lib/database/main';
-  import type { Collection, IndexableType, PromiseExtended } from 'dexie';
+  import { serialize, type Row } from '$lib/database/serialize';
+  import type { Collection, IndexableType } from 'dexie';
 
   const data: {
     table: TableCard | DeleteCard;
@@ -10,7 +11,8 @@
     oncloseasked: () => any;
   } = $props();
 
-  let rows = $state<PromiseExtended<object[]>>();
+  type Rows = { [key: string]: Row }[];
+  let rows = $state<Promise<Rows>>();
   if (data.table.type === 'table') {
     let collection: Collection<any, IndexableType, any> =
       database[data.table.data.table].toCollection();
@@ -18,16 +20,17 @@
     for (const modifer of data.modifiers) {
       collection = modifer.build(collection);
     }
-    rows = collection.toArray();
+
+    rows = collection.toArray().then((rows) => Promise.all(rows.map(serialize)));
   }
 </script>
 
-{#snippet table(rows: object[])}
+{#snippet table(rows: Rows)}
   <table>
     <thead>
       <tr>
-        {#each Object.keys(rows[0]) as key}
-          <th>{key}</th>
+        {#each Object.values(rows[0]) as column}
+          <th>{column.label}</th>
         {/each}
       </tr>
     </thead>
@@ -35,7 +38,7 @@
       {#each rows as row}
         <tr>
           {#each Object.values(row) as value}
-            <td>{value}</td>
+            <td>{value.value.toString()}</td>
           {/each}
         </tr>
       {/each}

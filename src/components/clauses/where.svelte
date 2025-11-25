@@ -43,14 +43,42 @@
   $effect(() => {
     builder.binded = { value, table, column };
   });
+
+  const whereType = builder.QRData.data.type;
 </script>
 
 <select>
   {#each database.tables as table}
     <optgroup label={table.name}>
-      {#each table.schema.indexes as idx}
+      {#each table.schema.indexes.filter((i) => !i.name.includes('id')) as idx}
         <option value={idx.name}>{idx.name}</option>
       {/each}
     </optgroup>
   {/each}
 </select>
+
+{#if whereType === null}
+  <select>
+    <option value="=">Equals</option>
+    <option value="=">Is Lower Than</option>
+    <option value="=">Is Greater Than</option>
+  </select>
+
+  <input type="text" placeholder="Leave blank to set NULL" />
+{/if}
+
+{#if whereType === 'between'}
+  <input type="text" />
+  AND
+  <input type="text" />
+{/if}
+
+{#if whereType === 'like'}
+  <p>
+    The <code>%</code> character is for any characters, of any length.
+  </p>
+  <p>
+    The<code>*</code> character is for any characters (single).
+  </p>
+  <input type="text" />
+{/if}
