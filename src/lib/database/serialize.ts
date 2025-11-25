@@ -8,11 +8,15 @@ type RowValue =
     }
   | {
       value: Date;
+    }
+  | {
+      value: null;
     };
 
 export type Row = {
   key: string;
   label: string;
+  original_value: string;
 } & RowValue;
 /**
  * Serialize the rows and keys for the front-end
@@ -24,33 +28,31 @@ export async function serialize(row: { [key: string]: string }): Promise<{ [key:
   for (const key in row) {
     if (key === 'id') continue;
 
-    const date = new Date(row[key]);
-    const value: RowValue = isNaN(+date)
+    const value: RowValue = /^\d{4}-\d{1,2}-\d{1,2}.*/.test(row[key])
       ? {
-          value: row[key]
+          value: new Date(row[key])
         }
       : {
-          value: date
+          value: row[key] ?? "<NULL>"
         };
 
     const serialized: Row = {
       key,
       label: key.replaceAll('_id', '').replaceAll('_', ' '),
+      original_value: row[key],
       ...value
     };
-    if (key.endsWith('_id')) {
-      if (!row[key]) serialized.value = '<not set>';
-      else {
-        const table = key.replace('_id', '') + 's';
 
-        //@ts-ignore
-        const entity = await (database[table] as EntityTable<{ [key: string]: string }>)
-          .where('id')
-          .equals(row[key])
-          .first();
+    if (key.endsWith('_id') && row[key]) {
+      const table = key.replace('_id', '') + 's';
 
-        serialized.value = entity?.name ?? entity?.object ?? row[key];
-      }
+      //@ts-ignore
+      const entity = await (database[table] as EntityTable<{ [key: string]: string }>)
+        .where('id')
+        .equals(row[key])
+        .first();
+
+      serialized.value = entity?.name ?? entity?.object ?? value.value;
     }
 
     serializedRow[key] = serialized;

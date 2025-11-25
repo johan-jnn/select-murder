@@ -49,3 +49,29 @@ button {
 
   text-transform: uppercase;
 }
+
+// Tables
+table {
+  width: 100%;
+  overflow-x: scroll;
+  border-radius: 0.5em;
+  background-color: var(--color-primary-light);
+  border-collapse: collapse;
+  border: 0.25em solid var(--color-black);
+
+  td,
+  th {
+    padding: 0.75em 0.5em;
+  }
+
+  thead {
+    background-color: var(--color-primary);
+    text-align: center;
+    text-transform: capitalize;
+    font-weight: 700;
+  }
+
+  tr:not(:first-of-type) {
+    border-top: 0.15em dashed var(--color-black);
+  }
+}
