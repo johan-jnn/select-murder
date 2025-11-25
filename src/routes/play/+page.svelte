@@ -1,5 +1,6 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
+  import Builder from '../../components/builder.svelte';
   import Settings from '../../components/settings.svelte';
 
   let state = $state<'settings' | 'playing'>('settings');
@@ -19,6 +20,6 @@
       axis: 'y'
     }}
   >
-    <h1>Not implemented yet.</h1>
+    <Builder />
   </div>
 {/if}

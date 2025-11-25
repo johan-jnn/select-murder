@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Settings } from '$lib/settings';
   import QrScanner from 'qr-scanner';
-  import { onMount } from 'svelte';
+  import { onMount, type Snippet } from 'svelte';
 
   const preferedCamera = new Settings(window.sessionStorage).binded('prefered-camera');
 
@@ -10,12 +10,16 @@
   let camera: QrScanner.FacingMode =
     (preferedCamera.get() as QrScanner.FacingMode | null) ?? 'environment';
 
-  const {
+  let {
     oncancel = () => {},
-    onscanned = () => {}
+    onscanned = () => {},
+    message,
+    title
   }: {
     oncancel?: () => any;
     onscanned?: (content: string) => any;
+    message?: Snippet;
+    title: string;
   } = $props();
 
   function switchCam() {
@@ -27,13 +31,16 @@
   onMount(() => {
     scanner = new QrScanner(video, (result) => {
       onscanned(result);
-      scanner.stop();
     });
     scanner.setCamera(camera);
     scanner.start().catch(() => {
       alert('Your camera seems to be offline.');
       oncancel();
     });
+
+    () => {
+      scanner.stop();
+    };
   });
 </script>
 
@@ -43,7 +50,10 @@
 >
   <div class="overlay">
     <header>
-      <h2>Scan your card's QR-Code</h2>
+      <h2>{title}</h2>
+      {#if message}
+        {@render message()}
+      {/if}
     </header>
 
     <div class="actions">

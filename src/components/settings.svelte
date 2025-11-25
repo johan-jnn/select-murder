@@ -1,8 +1,6 @@
 <script lang="ts">
-  import Settings from '$lib/settings';
+  import settings from '$lib/settings';
   import { slide } from 'svelte/transition';
-
-  const settings = Settings;
 
   const props: {
     onsave?: () => any;
