@@ -39,15 +39,11 @@
       switch (this.binded.where.type) {
         case 'eq': {
           const { value } = this.binded.where;
-          return query.and((row) => row[this.binded.column] == value);
+          return query.and((row) => row[this.binded.column]?.toLowerCase() == value?.toLowerCase());
         }
         case 'lt': {
           const { value } = this.binded.where;
           return query.and((row) => row[this.binded.column] <= value);
-        }
-        case 'gt': {
-          const { value } = this.binded.where;
-          return query.and((row) => row[this.binded.column] >= value);
         }
         case 'gt': {
           const { value } = this.binded.where;
@@ -65,6 +61,13 @@
         }
         case 'like': {
           const { value } = this.binded.where;
+          console.log(Array.from(value)
+            .map((character) =>
+              character === '*' ? '.' : character === '%' ? '.*' : (
+                "\\()[].+*/{}^$".includes(character) ? `\\${character}` : character
+              )
+            )
+            .join(''));
           const reg = new RegExp(
             Array.from(value)
               .map((character) =>
@@ -114,6 +117,7 @@
     });
 
     builder.binded = { where, table, column };
+    $inspect(builder.binded);
   });
   $effect(() => {
     if (whereType === null) {
@@ -144,7 +148,9 @@
   onchange={(e) => {
     [table, column] = e.currentTarget.value.split('.').map((v) => v.trim());
   }}
+  required
 >
+  <option disabled selected>Select a column</option>
   {#each database.tables.filter((t) => include_tables.includes(t.name)) as table}
     <optgroup label={table.name}>
       {#each table.schema.indexes.filter((i) => !i.name.includes('id')) as idx}
@@ -155,7 +161,7 @@
 </select>
 
 {#if whereType === null}
-  <select bind:value={values[0]}>
+  <select bind:value={values[0]} required>
     <option value="eq">Equals</option>
     <option value="lt">Is Lower Than</option>
     <option value="gt">Is Greater Than</option>
@@ -165,9 +171,9 @@
 {/if}
 
 {#if whereType === 'between'}
-  <input type="text" bind:value={values[0]} />
+  <input type="text" required bind:value={values[0]} />
   AND
-  <input type="text" bind:value={values[1]} />
+  <input type="text" required bind:value={values[1]} />
 {/if}
 
 {#if whereType === 'like'}
@@ -177,5 +183,5 @@
   <p>
     The<code>*</code> character is for any characters (single).
   </p>
-  <input type="text" bind:value={values[0]} />
+  <input type="text" required bind:value={values[0]} />
 {/if}

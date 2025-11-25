@@ -27,8 +27,14 @@
       database[data.table.data.table].toCollection();
 
     for (const modifer of data.modifiers) {
+      console.debug('--------------------------');
+      console.debug('Modifying query with', modifer);
+      console.debug('Before:', collection);
       collection = modifer.build(collection, data.modifiers);
+      console.debug('After:', collection);
     }
+
+    console.log('All modifiers has modified the query.');
 
     rows = collection
       .toArray()
