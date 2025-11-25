@@ -14,6 +14,9 @@ export class Settings {
   reset() {
     return this.store.clear();
   }
+  remove(key: string) {
+    return this.store.removeItem(this.constructKey(key));
+  }
   binded(key: string) {
     return new BindedSetting(this, key);
   }
@@ -29,6 +32,9 @@ export class BindedSetting {
   }
   set(value: string) {
     return this.settings.set(this.key, value);
+  }
+  delete() {
+    return this.settings.remove(this.key);
   }
 }
 export default new Settings();

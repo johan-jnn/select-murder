@@ -1,4 +1,5 @@
 <script lang="ts">
+  import GameSeeder from '$lib/database/seeder';
   import settings from '$lib/settings';
   import { slide } from 'svelte/transition';
 
@@ -57,7 +58,17 @@
       </label>
     </div>
 
-    <button type="submit">Start the game</button>
+    <div class="actions">
+      <button type="submit">Start the game</button>
+      <button
+        type="button"
+        style="opacity:0.80;"
+        onclick={() => {
+          GameSeeder.forceRefreshOnNextPageLoad();
+          location.reload();
+        }}>Refresh datas</button
+      >
+    </div>
   </form>
 </div>
 
@@ -86,6 +97,15 @@
         display: block;
         width: 100%;
         margin: 0.5em 0;
+      }
+
+      .actions {
+        width: 100%;
+        display: grid;
+        gap: 0.5em;
+        button {
+          width: 100%;
+        }
       }
     }
   }

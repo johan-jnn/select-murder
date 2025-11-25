@@ -31,4 +31,8 @@ export default class GameSeeder {
 
     this.IS_SEEDED_STORE.set(this.IS_SEEDED_VALUE);
   }
+
+  static forceRefreshOnNextPageLoad() {
+    this.IS_SEEDED_STORE.delete();
+  }
 }
