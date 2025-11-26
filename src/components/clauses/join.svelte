@@ -28,7 +28,7 @@
         // Remove the "s" from the table's name and add "_id" (convention)
         const foreign_key = distant_table.replace(/s$/, '') + '_id';
 
-        if (foreign_key in database[local_table].schema.indexes) {
+        if (foreign_key in database[local_table].schema.idxByName) {
           return joined === distant_table
             ? {
                 local_key: foreign_key,
