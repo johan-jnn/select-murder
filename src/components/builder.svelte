@@ -184,7 +184,7 @@
 <style lang="scss">
   header {
     font-size: 1.8rem;
-    margin-top: 2rem;
+    padding-top: 2rem;
     text-align: center;
     h1 {
       margin-bottom: 0;

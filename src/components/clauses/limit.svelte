@@ -6,8 +6,9 @@
   export class LimitBuilder extends Buildable<LimitCard, { max: number }> {
     binded: { max: number } = { max: 10 };
     COMPONENT = import('./limit.svelte').then((c) => c.default as Component);
-    build(query: Collection): Collection {
-      return query.limit(this.binded.max);
+    PRIORITY: number = 5;
+    build(query: {[key: string]: string}[]): {[key: string]: string}[] {
+      return query.slice(0, this.binded.max);
     }
   }
 </script>

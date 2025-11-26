@@ -5,8 +5,9 @@
 
   export class JoinBuilder extends Buildable<TableJoinCard, null> {
     COMPONENT = import('./join.svelte').then((c) => c.default as Component);
+    PRIORITY: number = 0;
     binded = null;
-    build(query: Collection): Collection {
+    build(query: {[key: string]: string}[]): {[key: string]: string}[] {
       // todo
       return query;
     }

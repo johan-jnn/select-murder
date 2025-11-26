@@ -27,6 +27,8 @@
         value: ''
       }
     } as WhereBinds;
+    PRIORITY = 10;
+
     constructor(card: WhereCard) {
       super(card);
       this.binded.where = (
@@ -35,29 +37,29 @@
           : { type: 'eq', value: '' }
       ) as typeof this.binded.where;
     }
-    build(query: Collection): Collection {
+    build(query: {[key: string]: string}[]): {[key: string]: string}[] {
       switch (this.binded.where.type) {
         case 'eq': {
           const { value } = this.binded.where;
-          return query.and((row) => row[this.binded.column]?.toLowerCase() == value?.toLowerCase());
+          return query.filter((row) => row[this.binded.column]?.toLowerCase() == value?.toLowerCase());
         }
         case 'lt': {
           const { value } = this.binded.where;
-          return query.and((row) => row[this.binded.column] <= value);
+          return query.filter((row) => row[this.binded.column] <= value);
         }
         case 'gt': {
           const { value } = this.binded.where;
-          return query.and((row) => row[this.binded.column] >= value);
+          return query.filter((row) => row[this.binded.column] >= value);
         }
         case 'between': {
           const { values } = this.binded.where;
-          return query.and(
+          return query.filter(
             (row) => row[this.binded.column] >= values[0] && row[this.binded.column] <= values[1]
           );
         }
         case 'in': {
           const { values } = this.binded.where;
-          return query.and((row) => values.includes(row[this.binded.column]));
+          return query.filter((row) => values.includes(row[this.binded.column]));
         }
         case 'like': {
           const { value } = this.binded.where;
@@ -75,7 +77,7 @@
               .join('')
           );
 
-          return query.and((row) => reg.test(row[this.binded.column]));
+          return query.filter((row) => reg.test(row[this.binded.column]));
         }
 
         default:

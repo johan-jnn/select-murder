@@ -3,7 +3,6 @@
   import database from '$lib/database/main';
   import { serialize, type Row } from '$lib/database/serialize';
   import settings from '$lib/settings';
-  import type { Collection, IndexableType } from 'dexie';
   import { onDestroy } from 'svelte';
 
   const data: {
@@ -21,21 +20,22 @@
   let rows = $state<Promise<Rows>>();
 
   if (data.table.type === 'table') {
-    let collection: Collection<any, IndexableType, any> =
-      database[data.table.data.table].toCollection();
-
-    for (const modifer of data.modifiers) {
-      console.debug('--------------------------');
-      console.debug('Modifying query with', modifer);
-      console.debug('Before:', collection);
-      collection = modifer.build(collection, data.modifiers);
-      console.debug('After:', collection);
-    }
-
-    console.log('All modifiers has modified the query.');
-
-    rows = collection
+    rows = database[data.table.data.table]
       .toArray()
+      .then((rows) => {
+        for (const modifer of data.modifiers.toSorted((a, b) => b.PRIORITY - a.PRIORITY)) {
+          console.debug('--------------------------');
+          console.debug('Modifying query with', modifer);
+          console.debug('Before:', rows);
+          //@ts-ignore
+          rows = modifer.build(rows, data.modifiers);
+          console.debug('After:', rows);
+        }
+        console.log('All modifiers has modified the query.');
+
+        return rows;
+      })
+      //@ts-ignore
       .then((rows) => Promise.all(rows.map(serialize)))
       .catch((err) => {
         console.error(err);

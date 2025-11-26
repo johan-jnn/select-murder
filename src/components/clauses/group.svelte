@@ -6,7 +6,8 @@
   export class GroupBuilder extends Buildable<GroupByCard, null> {
     COMPONENT = import('./group.svelte').then((c) => c.default as Component);
     binded = null;
-    build(query: Collection): Collection {
+    PRIORITY: number = 10;
+    build(query: {[key: string]: string}[]): {[key: string]: string}[] {
       // todo
       return query;
     }
