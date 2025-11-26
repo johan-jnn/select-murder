@@ -8,6 +8,49 @@
     COMPONENT = import('./join.svelte').then((c) => c.default as Component);
     PRIORITY: number = 0;
     binded = null;
+    /**
+     * Get the relation informations between 2 tables
+     * @param table_1
+     * @param table_2
+     * @returns `null` if the tables cannot be joined
+     */
+    private get_relation_info(
+      table: Tables,
+      joined: Tables
+    ): null | {
+      local_key: string;
+      distant_key: string;
+    } {
+      for (const [local_table, distant_table] of [
+        [table, joined],
+        [joined, table]
+      ]) {
+        // Remove the "s" from the table's name and add "_id" (convention)
+        const foreign_key = distant_table.replace(/s$/, '') + '_id';
+
+        if (foreign_key in database[local_table].schema.indexes) {
+          return joined === distant_table
+            ? {
+                local_key: foreign_key,
+                distant_key: 'id'
+              }
+            : {
+                local_key: 'id',
+                distant_key: foreign_key
+              };
+        } else if (
+          'place_id' in database[table].schema.idxByName &&
+          'place_id' in database[joined].schema.idxByName
+        ) {
+          return {
+            local_key: 'place_id',
+            distant_key: 'place_id'
+          };
+        }
+      }
+
+      return null;
+    }
     async build(
       query: { [key: string]: string }[],
       init_table: TableCard
@@ -16,33 +59,21 @@
       const { table: joinedTable } = this.QRData.data;
 
       let from_table: Tables | null = null;
-      let foreign_key: string | null = null;
-      let local_key: string | null = null;
+      let from_key: string | null = null;
+      let joined_key: string | null = null;
 
       for (const table of fromTables) {
-        for (const [from, to] of [
-          [joinedTable, table],
-          [table, joinedTable]
-        ]) {
-          // <table (no final 's')>_id
-          const foreign = from.replace(/s$/, '') + '_id';
-          if (foreign in database[to].schema.idxByName) {
-            if (from === joinedTable) {
-              from_table = to;
-
-              foreign_key = foreign;
-              local_key = 'id';
-            } else {
-              from_table = from;
-
-              foreign_key = 'id';
-              local_key = foreign;
-            }
-          }
+        const has_relation = this.get_relation_info(table, joinedTable);
+        if (has_relation) {
+          from_table = table;
+          from_key = has_relation.local_key;
+          joined_key = has_relation.distant_key;
+          break;
         }
       }
+      console.log(from_table, from_key, joined_key);
 
-      if (!(from_table && foreign_key && local_key)) return query;
+      if (!(from_table && from_key && joined_key)) return query;
 
       const joined_data: { [key: string]: any }[] = await database[joinedTable].toArray();
 
@@ -50,8 +81,8 @@
         .map((row) => {
           const merge_with = joined_data.filter(
             (joined_row) =>
-              row[DBKeyer.get_key(from_table, foreign_key)].toString() ===
-              joined_row[local_key].toString()
+              row[DBKeyer.get_key(from_table, from_key)].toString() ===
+              joined_row[joined_key].toString()
           );
           console.log(row, merge_with);
 

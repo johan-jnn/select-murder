@@ -142,7 +142,7 @@
             }
 
             console.log(row_value);
-            
+
             return reg.test(row_value);
           });
         }
@@ -176,19 +176,20 @@
   let table = $state('');
   let column = $state('');
 
-  let include_tables: string[] = $state([]);
   let values: string[] = $state([]);
-
-  $effect(() => {
-    include_tables = [init_table.data.table];
+  let included_tables = $derived.by(() => {
+    const tables: string[] = [init_table.data.table];
     stack.forEach((build) => {
       if (build.QRData.type === 'table-join') {
-        include_tables.push(build.QRData.data.table);
+        tables.push(build.QRData.data.table);
       }
     });
 
+    return tables;
+  });
+
+  $effect(() => {
     builder.binded = { where, table, column };
-    $inspect(builder.binded);
   });
   $effect(() => {
     if (whereType === null) {
@@ -222,7 +223,7 @@
   required
 >
   <option disabled selected>Select a column</option>
-  {#each database.tables.filter((t) => include_tables.includes(t.name)) as table}
+  {#each database.tables.filter((t) => included_tables.includes(t.name)) as table}
     <optgroup label={table.name}>
       {#each table.schema.indexes.filter((i) => i.name !== 'id') as idx}
         <option value="{table.name}{DBKeyer.SEPARATOR}{idx.name}">
