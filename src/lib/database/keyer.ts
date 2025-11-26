@@ -1,5 +1,5 @@
 export class DBKeyer {
-  private static SEPARATOR = '.';
+  static readonly SEPARATOR = '.';
 
   /**
    * @param table The table the datas come from

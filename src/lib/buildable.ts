@@ -1,7 +1,7 @@
 import type { Component } from 'svelte';
+import type { MaybePromise } from './utils';
 
 let id = 0;
-type MaybePromise<T> = T | Promise<T>;
 export abstract class Buildable<Data extends QRCard, Binded = unknown> {
   abstract binded: Binded;
   abstract readonly COMPONENT: Promise<Component>;

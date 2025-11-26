@@ -36,33 +36,83 @@
           : { type: 'eq', value: '' }
       ) as typeof this.binded.where;
     }
-    build(query: { [key: string]: string }[]): { [key: string]: string }[] {
+    async build(query: { [key: string]: string }[]): Promise<{ [key: string]: string }[]> {
       const key = DBKeyer.get_key(this.binded.table, this.binded.column);
+
+      const relation_table = this.binded.column.endsWith('_id')
+        ? database[(this.binded.column.replace(/_id$/i, '') + 's') as Tables]
+        : null;
 
       switch (this.binded.where.type) {
         case 'eq': {
           const { value } = this.binded.where;
-          return query.filter(
-            (row) => row[key]?.toLowerCase() == value?.toLowerCase()
-          );
+          return asyncFilter(query, async (row) => {
+            let row_value = row[key];
+            if (relation_table) {
+              const relation = await relation_table.get(parseInt(row[key]));
+              if (relation) {
+                const name = getEntityName(relation);
+                if (name) row_value = name;
+              }
+            }
+            return row_value?.toString() === value?.toString();
+          });
         }
         case 'lt': {
           const { value } = this.binded.where;
-          return query.filter((row) => row[key] <= value);
+          return asyncFilter(query, async (row) => {
+            let row_value = row[key];
+            if (relation_table) {
+              const relation = await relation_table.get(parseInt(row[key]));
+              if (relation) {
+                const name = getEntityName(relation);
+                if (name) row_value = name;
+              }
+            }
+            return row_value <= value;
+          });
         }
         case 'gt': {
           const { value } = this.binded.where;
-          return query.filter((row) => row[key] >= value);
+          return asyncFilter(query, async (row) => {
+            let row_value = row[key];
+            if (relation_table) {
+              const relation = await relation_table.get(parseInt(row[key]));
+              if (relation) {
+                const name = getEntityName(relation);
+                if (name) row_value = name;
+              }
+            }
+            return row_value >= value;
+          });
         }
         case 'between': {
           const { values } = this.binded.where;
-          return query.filter(
-            (row) => row[key] >= values[0] && row[key] <= values[1]
-          );
+          return asyncFilter(query, async (row) => {
+            let row_value = row[key];
+            if (relation_table) {
+              const relation = await relation_table.get(parseInt(row[key]));
+              if (relation) {
+                const name = getEntityName(relation);
+                if (name) row_value = name;
+              }
+            }
+            return row_value >= values[0] && row_value <= values[1];
+          });
         }
         case 'in': {
           const { values } = this.binded.where;
-          return query.filter((row) => values.includes(row[key]));
+          return asyncFilter(query, async (row) => {
+            let row_value = row[key];
+            if (relation_table) {
+              const relation = await relation_table.get(parseInt(row[key]));
+              if (relation) {
+                const name = getEntityName(relation);
+                if (name) row_value = name;
+              }
+            }
+            return values.includes(row_value);
+          });
         }
         case 'like': {
           const { value } = this.binded.where;
@@ -81,7 +131,20 @@
             'i'
           );
 
-          return query.filter((row) => reg.test(row[key]));
+          return asyncFilter(query, async (row) => {
+            let row_value = row[key];
+            if (relation_table) {
+              const relation = await relation_table.get(parseInt(row[key]));
+              if (relation) {
+                const name = getEntityName(relation);
+                if (name) row_value = name;
+              }
+            }
+
+            console.log(row_value);
+            
+            return reg.test(row_value);
+          });
         }
 
         default:
@@ -93,8 +156,10 @@
 </script>
 
 <script lang="ts">
+  import { DBKeyer } from '$lib/database/keyer';
   import database from '$lib/database/main';
-    import { DBKeyer } from '$lib/database/keyer';
+  import { getEntityName } from '$lib/database/serialize';
+  import { asyncFilter } from '$lib/utils';
 
   let {
     builder,
@@ -159,8 +224,10 @@
   <option disabled selected>Select a column</option>
   {#each database.tables.filter((t) => include_tables.includes(t.name)) as table}
     <optgroup label={table.name}>
-      {#each table.schema.indexes.filter((i) => !i.name.includes('id')) as idx}
-        <option value="{table.name}.{idx.name}">{idx.name}</option>
+      {#each table.schema.indexes.filter((i) => i.name !== 'id') as idx}
+        <option value="{table.name}{DBKeyer.SEPARATOR}{idx.name}">
+          {idx.name.replace(/_id$/i, '')}
+        </option>
       {/each}
     </optgroup>
   {/each}

@@ -20,6 +20,12 @@ export type Row = {
   original_value: string;
 } & RowValue;
 
+export function getEntityName(entity: {
+  [key: string]: string | number | Date;
+}): string | undefined {
+  return (entity.name ?? entity.object).toString();
+}
+
 /**
  * Serialize the rows and keys for the front-end
  * 1. Remove the ids
@@ -55,7 +61,7 @@ export async function serialize(row: { [key: string]: string }): Promise<{ [key:
         .equals(row[key])
         .first();
 
-      serialized.value = entity?.name ?? entity?.object ?? value.value;
+      serialized.value = entity ? (getEntityName(entity) ?? value.value) : value.value;
     }
 
     serializedRow[key] = serialized;
