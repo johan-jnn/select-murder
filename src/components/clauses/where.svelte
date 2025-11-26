@@ -61,17 +61,16 @@
         }
         case 'like': {
           const { value } = this.binded.where;
-          console.log(Array.from(value)
-            .map((character) =>
-              character === '*' ? '.' : character === '%' ? '.*' : (
-                "\\()[].+*/{}^$".includes(character) ? `\\${character}` : character
-              )
-            )
-            .join(''));
           const reg = new RegExp(
             Array.from(value)
               .map((character) =>
-                character === '*' ? '.' : character === '%' ? '.*' : `\\${character}`
+                character === '*'
+                  ? '.'
+                  : character === '%'
+                    ? '.*'
+                    : '\\()[].+/{}^$'.includes(character)
+                      ? `\\${character}`
+                      : character
               )
               .join('')
           );

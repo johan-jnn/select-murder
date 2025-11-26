@@ -135,15 +135,28 @@
     </Scanner>
   {/if}
   <div class="builders-container">
-    <h1>{builders.length} card of {builder_limit} scanned.</h1>
+    {#if table?.type === 'table'}
+      <header>
+        <h1>{builders.length + 1} card of {builder_limit + 1} scanned.</h1>
+        <p>The query starts from table <code>{table.data.table}</code></p>
+      </header>
+      {@render builder(builders)}
 
-    {@render builder(builders)}
-
-    {#if builders.length < builder_limit}
-      <button type="button" onclick={() => (show_qr = true)}>Scan your next card</button>
+      {#if builders.length < builder_limit}
+        <button type="button" onclick={() => (show_qr = true)}>Scan your next card</button>
+      {/if}
+      <button type="button" onclick={() => props.onbuildable(table!, builders)}>
+        Get the result
+      </button>
+    {:else}
+      <header>
+        <h1>Are you sure you know the murderer ?</h1>
+      </header>
+      <button type="button" onclick={() => props.onbuildable(table!, builders)}>
+        Of course yes !
+      </button>
     {/if}
-    <button type="button" onclick={() => props.onbuildable(table!, builders)}>Get the result</button
-    >
+
     <button type="button" onclick={reset}>Cancel</button>
   </div>
 {/if}
@@ -169,9 +182,13 @@
 {/snippet}
 
 <style lang="scss">
-  h1 {
+  header {
     font-size: 1.8rem;
-    padding-top: 2rem;
+    margin-top: 2rem;
+    text-align: center;
+    h1 {
+      margin-bottom: 0;
+    }
   }
   .builders-container {
     max-width: 400px;
@@ -204,12 +221,6 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
-        :global(input),
-        :global(select) {
-          border-radius: 6px;
-          padding: 6px;
-          font-size: 1.1rem;
-        }
       }
       button {
         background-color: var(--color-primary);

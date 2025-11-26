@@ -37,7 +37,14 @@
         axis: 'y'
       }}
     >
-      <Result {table} {modifiers} oncloseasked={() => (table = null)} />
+      <Result
+        {table}
+        {modifiers}
+        oncloseasked={(solved) => {
+          table = null;
+          if (solved) show = 'settings';
+        }}
+      />
     </div>
   {/if}
 {/if}

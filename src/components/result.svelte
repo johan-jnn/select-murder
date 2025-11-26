@@ -9,7 +9,7 @@
   const data: {
     table: TableCard | DeleteCard;
     modifiers: Buildable<ModifierCard>[];
-    oncloseasked: () => any;
+    oncloseasked: (solved: boolean) => any;
   } = $props();
 
   $inspect('Table:', data.table, 'Modifiers:', data.modifiers);
@@ -44,9 +44,21 @@
       .finally(() => {
         // Start the timer
         timeout_id = setTimeout(() => {
-          data.oncloseasked();
+          data.oncloseasked(false);
         }, timeout);
       });
+  }
+
+  let suspicion_answer = $state<null | {
+    suspect: { [key: string]: string | number | Date };
+    answer: boolean;
+  }>(null);
+  async function validateSuspicionAnswer(suspect_id: number) {
+    const suspect = (await database.suspects.get(suspect_id))!;
+    suspicion_answer = {
+      suspect,
+      answer: suspect?.id === 19804
+    };
   }
 
   onDestroy(() => {
@@ -94,10 +106,55 @@
         {/if}
       {/await}
     </main>
+  {:else}
+    <main id="suspicion">
+      <h1>Will the case be resolved ?</h1>
+      {#if suspicion_answer === null}
+        <form
+          method="dialog"
+          onsubmit={(e) => {
+            e.preventDefault();
+            const data = new FormData(e.currentTarget);
+            validateSuspicionAnswer(parseInt(data.get('suspect')?.toString() ?? '-1'));
+          }}
+        >
+          <label for="suspect">
+            Select who you think the murderer is
+            <select name="suspect" id="suspect" required>
+              <option disabled selected>No selection</option>
+
+              {#await database.suspects.orderBy('name').toArray() then suspects}
+                {#each suspects as suspect}
+                  <option value={suspect.id}>{suspect.name}</option>
+                {/each}
+              {/await}
+            </select>
+          </label>
+
+          <button type="submit">Validate my answer</button>
+        </form>
+      {:else if suspicion_answer.answer}
+        <h2>Congratulation !</h2>
+        <p>You just found the murderer and resolved this case.</p>
+      {:else}
+        <p>Sorry, {suspicion_answer.suspect.name} was not the murderer.</p>
+        <h2>What's next ?</h2>
+        <p>
+          If you have were under surveillance, the murderer kills you. <strong>You're out</strong>.
+        </p>
+        <p>
+          Else, you are now under the surveillance of the murderer. Replace one of your card with
+          the top card of the trash pack.
+        </p>
+      {/if}
+    </main>
   {/if}
 
-  <button class="close-btn bg-primary tx-white" type="button" onclick={data.oncloseasked}
-    >Close</button
+  <button
+    class="close-btn bg-primary tx-white"
+    type="button"
+    onclick={() => data.oncloseasked(!!suspicion_answer?.answer)}
+    >{suspicion_answer?.answer ? 'You can be proud of you !' : 'Close'}</button
   >
 </div>
 
@@ -134,6 +191,7 @@
 
     > main {
       height: 100%;
+      width: 100%;
 
       &#table {
         display: grid;
@@ -157,6 +215,19 @@
           animation: appear var(--tm) ease-in forwards;
         }
       }
+
+      &#suspicion {
+        form {
+          width: 100%;
+          display: grid;
+          place-content: center;
+          gap: 2em;
+
+          select {
+            width: 100%;
+          }
+        }
+      }
     }
     .table-wrapper {
       height: 100%;
@@ -165,27 +236,4 @@
       animation: fadeout var(--tm) cubic-bezier(1, 1, 1, 0) forwards;
     }
   }
-
-  // h1 {
-  //   font-size: 1.4rem;
-  //   margin-top: 2rem;
-  // }
-
-  // .table-container {
-  //   width: 100%;
-  //   overflow-x: auto;
-  //   background-color: var(--color-black);
-  //   padding: 1em;
-  //   border-radius: 6px;
-  // }
-
-  // th,
-  // td {
-  //   padding: 6px;
-  // }
-
-  // .close-btn {
-  //   display: block;
-  //   margin: 1rem auto;
-  // }
 </style>
