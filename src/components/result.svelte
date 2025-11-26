@@ -55,7 +55,6 @@
 </script>
 
 {#snippet table(rows: Rows)}
-  {$inspect(rows)}
   <div class="table-container">
     <table>
       <thead>
