@@ -1,5 +1,6 @@
 <script lang="ts" module>
   import { Buildable } from '$lib/buildable';
+  import { DBKeyer } from '$lib/database/keyer';
   import database from '$lib/database/main';
   import type { Component } from 'svelte';
 
@@ -19,11 +20,13 @@
       reverse: false
     };
     build(query: { [key: string]: string }[]): { [key: string]: string }[] {
+      const key = DBKeyer.get_key(this.binded.table, this.binded.column);
+
       query.sort((a, b) => {
         if (this.binded.reverse) {
           [b, a] = [a, b];
         }
-        const [a_val, b_val] = [a, b].map((c) => c[this.binded.column]);
+        const [a_val, b_val] = [a, b].map((c) => c[key]);
 
         return a_val === b_val ? 0 : a_val < b_val ? -1 : 1;
       });

@@ -1,13 +1,12 @@
 <script lang="ts" module>
   import { Buildable } from '$lib/buildable';
-  import type { Collection } from 'dexie';
   import type { Component } from 'svelte';
 
   export class LimitBuilder extends Buildable<LimitCard, { max: number }> {
     binded: { max: number } = { max: 10 };
     COMPONENT = import('./limit.svelte').then((c) => c.default as Component);
     PRIORITY: number = 5;
-    build(query: {[key: string]: string}[]): {[key: string]: string}[] {
+    build(query: { [key: string]: string }[]): { [key: string]: string }[] {
       return query.slice(0, this.binded.max);
     }
   }

@@ -1,4 +1,5 @@
 import type { EntityTable } from 'dexie';
+import { DBKeyer } from './keyer';
 import database from './main';
 
 type RowValue =
@@ -27,8 +28,9 @@ export type Row = {
 export async function serialize(row: { [key: string]: string }): Promise<{ [key: string]: Row }> {
   const serializedRow: { [key: string]: Row } = {};
   for (const key in row) {
-    if (key === 'id') continue;
+    const { table, column } = DBKeyer.from_key(key);
 
+    if (column === 'id') continue;
     const value: RowValue = /^\d{4}-\d{1,2}-\d{1,2}.*/.test(row[key])
       ? {
           value: new Date(row[key])
@@ -39,16 +41,16 @@ export async function serialize(row: { [key: string]: string }): Promise<{ [key:
 
     const serialized: Row = {
       key,
-      label: key.replaceAll('_id', '').replaceAll('_', ' '),
+      label: DBKeyer.get_label(key.replaceAll('_id', '').replaceAll('_', ' ')),
       original_value: row[key],
       ...value
     };
 
-    if (key.endsWith('_id') && row[key]) {
-      const table = key.replace('_id', '') + 's';
+    if (column.endsWith('_id') && row[key]) {
+      const foreign_table = column.replace('_id', '') + 's';
 
       //@ts-ignore
-      const entity = await (database[table] as EntityTable<{ [key: string]: string }>)
+      const entity = await (database[foreign_table] as EntityTable<{ [key: string]: string }>)
         .where('id')
         .equals(row[key])
         .first();

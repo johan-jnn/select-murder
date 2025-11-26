@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Buildable } from '$lib/buildable';
+  import { DBKeyer } from '$lib/database/keyer';
   import database from '$lib/database/main';
   import { serialize, type Row } from '$lib/database/serialize';
   import settings from '$lib/settings';
@@ -22,7 +23,11 @@
   if (data.table.type === 'table') {
     rows = database[data.table.data.table]
       .toArray()
-      .then((rows) => {
+      .then((rows: { [key: string]: any }[]) => {
+        console.debug('Transforming keys...');
+        rows = rows.map((row) => DBKeyer.transform_row(row, data.table.data?.table!));
+        console.debug(`Done. Result:`, rows);
+
         for (const modifer of data.modifiers.toSorted((a, b) => b.PRIORITY - a.PRIORITY)) {
           console.debug('--------------------------');
           console.debug('Modifying query with', modifer);

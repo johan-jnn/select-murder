@@ -37,30 +37,32 @@
       ) as typeof this.binded.where;
     }
     build(query: { [key: string]: string }[]): { [key: string]: string }[] {
+      const key = DBKeyer.get_key(this.binded.table, this.binded.column);
+
       switch (this.binded.where.type) {
         case 'eq': {
           const { value } = this.binded.where;
           return query.filter(
-            (row) => row[this.binded.column]?.toLowerCase() == value?.toLowerCase()
+            (row) => row[key]?.toLowerCase() == value?.toLowerCase()
           );
         }
         case 'lt': {
           const { value } = this.binded.where;
-          return query.filter((row) => row[this.binded.column] <= value);
+          return query.filter((row) => row[key] <= value);
         }
         case 'gt': {
           const { value } = this.binded.where;
-          return query.filter((row) => row[this.binded.column] >= value);
+          return query.filter((row) => row[key] >= value);
         }
         case 'between': {
           const { values } = this.binded.where;
           return query.filter(
-            (row) => row[this.binded.column] >= values[0] && row[this.binded.column] <= values[1]
+            (row) => row[key] >= values[0] && row[key] <= values[1]
           );
         }
         case 'in': {
           const { values } = this.binded.where;
-          return query.filter((row) => values.includes(row[this.binded.column]));
+          return query.filter((row) => values.includes(row[key]));
         }
         case 'like': {
           const { value } = this.binded.where;
@@ -79,7 +81,7 @@
             'i'
           );
 
-          return query.filter((row) => reg.test(row[this.binded.column]));
+          return query.filter((row) => reg.test(row[key]));
         }
 
         default:
@@ -92,6 +94,7 @@
 
 <script lang="ts">
   import database from '$lib/database/main';
+    import { DBKeyer } from '$lib/database/keyer';
 
   let {
     builder,
