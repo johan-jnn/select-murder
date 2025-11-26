@@ -38,8 +38,8 @@
           type="range"
           name="game.max-card-per-query"
           id="scannable-cards"
-          min="2"
-          max="8"
+          min="1"
+          max="5"
           bind:value={maxCardPerQuery}
         />
       </label>
@@ -53,7 +53,7 @@
           name="game.result-ms-timeout"
           id="result-timeout"
           min="15000"
-          max="60000"
+          max="120000"
           step="1000"
           bind:value={resultTimeout}
         />
