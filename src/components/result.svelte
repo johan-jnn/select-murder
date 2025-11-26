@@ -37,6 +37,10 @@
       })
       //@ts-ignore
       .then((rows) => Promise.all(rows.map(serialize)))
+      .then((rows) => {
+        console.debug('Final results:', rows);
+        return rows;
+      })
       .catch((err) => {
         console.error(err);
         return [];
@@ -80,7 +84,13 @@
         {#each rows as row}
           <tr>
             {#each Object.values(row) as value}
-              <td>{value.value ? value.value.toString() : 'null'}</td>
+              <td>
+                {value.value
+                  ? value.value instanceof Date
+                    ? `${value.value.toDateString()} at ${value.value.toLocaleTimeString()}`
+                    : value.value.toString()
+                  : 'null'}</td
+              >
             {/each}
           </tr>
         {/each}

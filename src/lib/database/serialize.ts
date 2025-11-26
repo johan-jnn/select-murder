@@ -18,6 +18,7 @@ export type Row = {
   label: string;
   original_value: string;
 } & RowValue;
+
 /**
  * Serialize the rows and keys for the front-end
  * 1. Remove the ids
@@ -33,7 +34,7 @@ export async function serialize(row: { [key: string]: string }): Promise<{ [key:
           value: new Date(row[key])
         }
       : {
-          value: row[key] ?? "<NULL>"
+          value: row[key] ?? '<NULL>'
         };
 
     const serialized: Row = {
