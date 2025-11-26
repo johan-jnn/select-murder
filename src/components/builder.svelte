@@ -10,6 +10,7 @@
 
   const props: {
     onbuildable: (table: TableCard | DeleteCard, buildables: Buildable<ModifierCard>[]) => void;
+    onsettingsasked?: () => void;
   } = $props();
 
   let builders = $state<Buildable<ModifierCard>[]>([]);
@@ -93,9 +94,17 @@
       <div class="card-body bg-white tx-primary">
         <p>You have formed a query with the cards in your hand?</p>
 
-        <button class="card-cta" type="button" onclick={() => (askFor = 'table')}
-          >Start your query</button
-        >
+        <button type="button" class="card-cta" onclick={() => (askFor = 'table')}>
+          Start your query
+        </button>
+        {#if props.onsettingsasked}
+          <button
+            type="button"
+            class="card-cta"
+            style="opacity: 0.85;"
+            onclick={props.onsettingsasked}>Change settings</button
+          >
+        {/if}
       </div>
     </div>
   </div>

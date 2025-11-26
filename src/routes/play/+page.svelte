@@ -26,7 +26,10 @@
         axis: 'y'
       }}
     >
-      <Builder onbuildable={(_table, _modifier) => ((table = _table), (modifiers = _modifier))} />
+      <Builder
+        onbuildable={(_table, _modifier) => ((table = _table), (modifiers = _modifier))}
+        onsettingsasked={() => (show = 'settings')}
+      />
     </div>
   {:else}
     <div
