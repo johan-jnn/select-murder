@@ -1,6 +1,5 @@
 <script lang="ts" module>
   import { Buildable } from '$lib/buildable';
-  import type { Collection } from 'dexie';
   import type { Component } from 'svelte';
 
   interface WhereBinds {
@@ -37,11 +36,13 @@
           : { type: 'eq', value: '' }
       ) as typeof this.binded.where;
     }
-    build(query: {[key: string]: string}[]): {[key: string]: string}[] {
+    build(query: { [key: string]: string }[]): { [key: string]: string }[] {
       switch (this.binded.where.type) {
         case 'eq': {
           const { value } = this.binded.where;
-          return query.filter((row) => row[this.binded.column]?.toLowerCase() == value?.toLowerCase());
+          return query.filter(
+            (row) => row[this.binded.column]?.toLowerCase() == value?.toLowerCase()
+          );
         }
         case 'lt': {
           const { value } = this.binded.where;
@@ -74,7 +75,8 @@
                       ? `\\${character}`
                       : character
               )
-              .join('')
+              .join(''),
+            'i'
           );
 
           return query.filter((row) => reg.test(row[this.binded.column]));
