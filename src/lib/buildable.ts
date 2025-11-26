@@ -1,6 +1,7 @@
 import type { Component } from 'svelte';
 
 let id = 0;
+type MaybePromise<T> = T | Promise<T>;
 export abstract class Buildable<Data extends QRCard, Binded = unknown> {
   abstract binded: Binded;
   abstract readonly COMPONENT: Promise<Component>;
@@ -13,6 +14,7 @@ export abstract class Buildable<Data extends QRCard, Binded = unknown> {
 
   abstract build(
     query: { [key: string]: string }[],
+    table: TableCard,
     stack: Buildable<QRCard>[]
-  ): { [key: string]: string }[];
+  ): MaybePromise<{ [key: string]: string }[]>;
 }

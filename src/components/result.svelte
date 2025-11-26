@@ -23,17 +23,17 @@
   if (data.table.type === 'table') {
     rows = database[data.table.data.table]
       .toArray()
-      .then((rows: { [key: string]: any }[]) => {
+      .then(async (rows: { [key: string]: any }[]) => {
         console.debug('Transforming keys...');
         rows = rows.map((row) => DBKeyer.transform_row(row, data.table.data?.table!));
         console.debug(`Done. Result:`, rows);
 
-        for (const modifer of data.modifiers.toSorted((a, b) => b.PRIORITY - a.PRIORITY)) {
+        for await (const modifer of data.modifiers.toSorted((a, b) => b.PRIORITY - a.PRIORITY)) {
           console.debug('--------------------------');
           console.debug('Modifying query with', modifer);
           console.debug('Before:', rows);
           //@ts-ignore
-          rows = modifer.build(rows, data.modifiers);
+          rows = await modifer.build(rows, data.table, data.modifiers);
           console.debug('After:', rows);
         }
         console.log('All modifiers has modified the query.');

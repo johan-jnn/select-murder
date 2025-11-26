@@ -22,7 +22,8 @@ export class DBKeyer {
    * @param key The parsed key
    */
   static get_label(key: string): string {
-    return key.replace(this.SEPARATOR, "'s ");
+    // Remove the "s" from the table's name and then replace the separator by 's;
+    return key.replace(`s${this.SEPARATOR}`, this.SEPARATOR).replace(this.SEPARATOR, "'s ");
   }
 
   /**
@@ -30,8 +31,8 @@ export class DBKeyer {
    * @param row The row to transform
    * @param table The table the row is attached to
    */
-  static transform_row<ROW extends { [key: string]: any }>(row: ROW, table: string): ROW {
-    const transformed = {} as ROW;
+  static transform_row(row: { [key: string]: any }, table: string): { [key: string]: any } {
+    const transformed = {} as { [key: string]: any };
 
     for (const key in row) {
       //@ts-ignore
