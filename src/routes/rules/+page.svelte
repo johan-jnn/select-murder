@@ -383,18 +383,6 @@
     line-height: 1.7;
   }
 
-  /* ===== Hook ===== */
-  p.hook strong {
-    display: block;
-    font-size: 1.1rem;
-    color: var(--purple-light);
-    background: rgba(41, 20, 75, 0.6);
-    padding: 0.8rem 1rem;
-    border-radius: 12px;
-    margin: 1rem 0;
-    box-shadow: 0 0 15px var(--shadow-light);
-  }
-
   /* ===== Lists ===== */
   ul,
   ol {

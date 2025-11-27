@@ -1,7 +1,6 @@
 <script lang="ts">
   import { type Buildable } from '$lib/buildable';
   import settings from '$lib/settings';
-  import { GroupBuilder } from './clauses/group.svelte';
   import { JoinBuilder } from './clauses/join.svelte';
   import { LimitBuilder } from './clauses/limit.svelte';
   import { OrderByBuilder } from './clauses/orderby.svelte';
@@ -69,14 +68,11 @@
         case 'table-join':
           builder = JoinBuilder;
           break;
-        case 'group-by':
-          builder = GroupBuilder;
-          break;
         case 'order-by':
           builder = OrderByBuilder;
           break;
         default: {
-          qrmsg = 'The qr-code data is not valid.';
+          qrmsg = 'The qr-code data is not valid (or not yet implemented).';
           return false;
         }
       }
