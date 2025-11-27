@@ -1,5 +1,6 @@
 <script lang="ts">
   import { type Buildable } from '$lib/buildable';
+  import database from '$lib/database/main';
   import settings from '$lib/settings';
   import { JoinBuilder } from './clauses/join.svelte';
   import { LimitBuilder } from './clauses/limit.svelte';
@@ -81,27 +82,37 @@
     }
     return true;
   }
+
+  const crime_scene_id = parseInt(settings.get('game.crime_scene_id')!);
 </script>
 
 {#if askFor === null}
   <div class="center-screen">
     <div class="card">
-      <h2 class="card-title bg-primary-light tx-center">Let's go !</h2>
-      <div class="card-body bg-white tx-primary">
-        <p>You have formed a query with the cards in your hand?</p>
+      {#await database.crime_scenes.get(crime_scene_id) then crime_scene}
+        <h2 class="card-title bg-primary-light tx-center">Let's play !</h2>
+        <div class="card-body bg-white tx-primary">
+          <div>
+            {@html crime_scene!.details}
+          </div>
 
-        <button type="button" class="card-cta" onclick={() => (askFor = 'table')}>
-          Start your query
-        </button>
-        {#if props.onsettingsasked}
-          <button
-            type="button"
-            class="card-cta"
-            style="opacity: 0.85;"
-            onclick={props.onsettingsasked}>Change settings</button
-          >
-        {/if}
-      </div>
+          <hr />
+
+          <p style="text-align: center;">Have you formed a query with the cards in your hand?</p>
+
+          <button type="button" class="card-cta" onclick={() => (askFor = 'table')}>
+            Start your query
+          </button>
+          {#if props.onsettingsasked}
+            <button
+              type="button"
+              class="card-cta"
+              style="opacity: 0.85;"
+              onclick={props.onsettingsasked}>Change settings</button
+            >
+          {/if}
+        </div>
+      {/await}
     </div>
   </div>
 {:else if askFor === 'table'}
@@ -178,6 +189,9 @@
 {/snippet}
 
 <style lang="scss">
+  hr {
+    margin: 2em 0;
+  }
   header {
     padding-top: 2rem;
     text-align: center;
