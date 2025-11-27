@@ -2,6 +2,7 @@
   import database from '$lib/database/main';
   import GameSeeder from '$lib/database/seeder';
   import settings from '$lib/settings';
+  import { arrayGroupBy } from '$lib/utils';
   import { slide } from 'svelte/transition';
 
   const props: {
@@ -10,6 +11,7 @@
 
   let maxCardPerQuery = $state(parseInt(settings.get('game.max-card-per-query') ?? '6'));
   let resultTimeout = $state(parseInt(settings.get('game.result-ms-timeout') ?? '40000'));
+  let choosedCrimeScene = $state<number>(parseInt(settings.get('game.crime_scene_id') ?? '1234'));
 
   function formSubmit(e: SubmitEvent & { currentTarget: HTMLFormElement }) {
     e.preventDefault();
@@ -32,6 +34,34 @@
     <h1 id="title-card" class="card-title bg-white tx-primary">Choose Settings</h1>
 
     <form onsubmit={formSubmit} class="card-body bg-primary-light tx-black">
+      <div id="scenario">
+        <label for="scenario">
+          Select the scenario you'll play
+
+          {#await database.crime_scenes.toArray() then crime_scenes}
+            <select name="game.crime_scene_id" id="scenario" bind:value={choosedCrimeScene}>
+              {#each Object.entries(arrayGroupBy(crime_scenes, 'difficulty')) as [difficulty, scenes] (difficulty)}
+                <optgroup label={['Easy', 'Medium', 'Hard'][parseInt(difficulty)]}>
+                  {#each scenes as crime_scene}
+                    <option value={crime_scene.id}>{crime_scene.name}</option>
+                  {/each}
+                </optgroup>
+              {/each}
+            </select>
+          {/await}
+        </label>
+
+        {#key choosedCrimeScene}
+          {#await database.crime_scenes.get(choosedCrimeScene) then crime_scene}
+            {#if crime_scene}
+              <div>
+                {@html crime_scene.details}
+              </div>
+            {/if}
+          {/await}
+        {/key}
+      </div>
+
       <label for="scannable-cards">
         Maximum amount of cards the player can scan in a query ({maxCardPerQuery})
         <input
@@ -84,6 +114,17 @@
       height: 100%;
       > div {
         overflow-y: scroll;
+      }
+
+      #scenario {
+        select {
+          width: 100%;
+        }
+        > div {
+          font-size: 0.85em;
+          max-height: 30vh;
+          overflow-y: scroll;
+        }
       }
 
       label {

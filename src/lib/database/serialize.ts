@@ -37,6 +37,11 @@ export async function serialize(row: { [key: string]: string }): Promise<{ [key:
     const { table, column } = DBKeyer.from_key(key);
 
     if (column === 'id') continue;
+    if (
+      (table as Tables) === 'crime_scenes' &&
+      ['difficulty', 'guilty_suspect_id', 'details'].includes(column)
+    )
+      continue;
     const value: RowValue = /^\d{4}-\d{1,2}-\d{1,2}.*/.test(row[key])
       ? {
           value: new Date(row[key])

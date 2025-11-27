@@ -27,6 +27,11 @@ const database = new Dexie('SELECT_MURDER') as Dexie & {
       description: string;
       date: Date;
       place_id: number;
+
+      // Properties bellow are only used in the settings (serializer will skip those ones)
+      details: string;
+      guilty_suspect_id: number;
+      difficulty: 0 | 1 | 2;
     },
     'id'
   >;

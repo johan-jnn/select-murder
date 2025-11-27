@@ -183,7 +183,6 @@
 
 <style lang="scss">
   header {
-    font-size: 1.8rem;
     padding-top: 2rem;
     text-align: center;
     h1 {

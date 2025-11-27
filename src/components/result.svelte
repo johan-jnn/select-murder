@@ -18,6 +18,7 @@
   type Rows = { [key: string]: Row }[];
 
   const timeout = parseInt(settings.get('game.result-ms-timeout')!);
+
   let rows = $state<Promise<Rows>>();
 
   if (data.table.type === 'table') {
@@ -64,9 +65,13 @@
   }>(null);
   async function validateSuspicionAnswer(suspect_id: number) {
     const suspect = (await database.suspects.get(suspect_id))!;
+    const crime_scene = (await database.crime_scenes.get(
+      parseInt(settings.get('game.crime_scene_id')!)
+    ))!;
+
     suspicion_answer = {
       suspect,
-      answer: suspect?.id === 19804
+      answer: suspect?.id === crime_scene.guilty_suspect_id
     };
   }
 

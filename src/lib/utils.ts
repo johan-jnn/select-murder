@@ -14,3 +14,19 @@ export async function asyncFilter<T>(
     await Promise.all(array.map(async (item) => ((await filterer(item)) ? item : CLEAR)))
   ).filter((item) => item !== CLEAR) as T[];
 }
+
+export function arrayGroupBy<ArrData extends { [key: string]: any }>(
+  array: ArrData[],
+  key: string
+): { [key: string]: ArrData[] } {
+  const result: { [key: string]: ArrData[] } = {};
+
+  for (const data of array) {
+    const group = data[key].toString();
+    if (!(group in result)) result[group] = [];
+
+    result[group].push(data);
+  }
+
+  return result;
+}
