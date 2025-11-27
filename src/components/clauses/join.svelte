@@ -53,16 +53,23 @@
     }
     async build(
       query: { [key: string]: string }[],
-      init_table: TableCard
+      init_table: TableCard,
+      stack: Buildable<QRCard>[]
     ): Promise<{ [key: string]: string }[]> {
       const fromTables = [init_table.data.table];
+      for (const buildable of stack) {
+        if (buildable instanceof JoinBuilder) {
+          fromTables.push(buildable.QRData.data.table);
+        }
+      }
+
       const { table: joinedTable } = this.QRData.data;
 
       let from_table: Tables | null = null;
       let from_key: string | null = null;
       let joined_key: string | null = null;
 
-      for (const table of fromTables) {
+      for (const table of fromTables.filter((t) => t !== joinedTable)) {
         const has_relation = this.get_relation_info(table, joinedTable);
         if (has_relation) {
           from_table = table;

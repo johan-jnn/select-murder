@@ -66,10 +66,6 @@
           builder = WhereBuilder;
           break;
         case 'table-join':
-          if (builders.find((b) => b instanceof JoinBuilder)) {
-            qrmsg = 'Currently only 1 join is supported.';
-            return false;
-          }
           builder = JoinBuilder;
           break;
         case 'order-by':
