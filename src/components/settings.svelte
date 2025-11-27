@@ -63,7 +63,7 @@
       </div>
 
       <label for="scannable-cards">
-        Maximum amount of cards the player can scan in a query ({maxCardPerQuery})
+        Maximum amount of cards the player can scan in a query ({maxCardPerQuery + 1})
         <input
           type="range"
           name="game.max-card-per-query"
