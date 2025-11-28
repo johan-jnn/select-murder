@@ -78,8 +78,6 @@
           break;
         }
       }
-      console.log(from_table, from_key, joined_key);
-
       if (!(from_table && from_key && joined_key)) return query;
 
       const joined_data: { [key: string]: any }[] = await database[joinedTable].toArray();
@@ -88,8 +86,8 @@
         .map((row) => {
           const merge_with = joined_data.filter(
             (joined_row) =>
-              row[DBKeyer.get_key(from_table, from_key)].toString() ===
-              joined_row[joined_key].toString()
+              row[DBKeyer.get_key(from_table, from_key)]?.toString() ===
+              joined_row[joined_key]?.toString()
           );
           console.log(row, merge_with);
 

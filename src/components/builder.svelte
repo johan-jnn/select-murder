@@ -13,11 +13,10 @@
     onsettingsasked?: () => void;
   } = $props();
 
+  let table = $state<TableCard | DeleteCard | null>(null);
   let builders = $state<Buildable<ModifierCard>[]>([]);
 
-  let table = $state<TableCard | DeleteCard | null>(null);
   let show_qr = $state(false);
-
   let askFor = $state<null | 'table' | 'builder'>(null);
   let qrmsg = $state('');
 
